@@ -260,8 +260,8 @@ githubbench-delta/
 
 ## Benchmark results
 
-**Source of truth:** experiment [`exp_6afa2ce533ba4e0a`](results/experiments/exp_6afa2ce533ba4e0a/) only.  
-Full tables, costs, and caveats: **[docs/benchmark.md](docs/benchmark.md)** · Narrative: [BENCHMARK_REPORT.md](results/experiments/exp_6afa2ce533ba4e0a/BENCHMARK_REPORT.md).
+**Source of truth:** experiment `exp_6afa2ce533ba4e0a` only.  
+Full tables, costs, and caveats: **[docs/benchmark.md](docs/benchmark.md)** · Narrative: [BENCHMARK_REPORT.md](docs/assets/live-benchmark/exp_6afa2ce533ba4e0a_BENCHMARK_REPORT.md).
 
 | | MiniCPM | Codex |
 |--|--------:|------:|

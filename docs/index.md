@@ -68,7 +68,7 @@ flowchart LR
 ![Overview](assets/screenshots/overview.png)
 
 Live scored showcase (authoritative numbers):  
-[`../results/experiments/exp_6afa2ce533ba4e0a/BENCHMARK_REPORT.md`](../results/experiments/exp_6afa2ce533ba4e0a/BENCHMARK_REPORT.md)
+[`assets/live-benchmark/exp_6afa2ce533ba4e0a_BENCHMARK_REPORT.md`](assets/live-benchmark/exp_6afa2ce533ba4e0a_BENCHMARK_REPORT.md)
 
 ---
 

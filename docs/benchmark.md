@@ -2,10 +2,10 @@
 
 Published **live** results for experiment **`exp_6afa2ce533ba4e0a`**.
 
-All numbers in this document are taken only from:
+All numbers in this document are taken only from experiment `exp_6afa2ce533ba4e0a`.
 
-- [`results/experiments/exp_6afa2ce533ba4e0a/`](../results/experiments/exp_6afa2ce533ba4e0a/)
-- [`BENCHMARK_REPORT.md`](../results/experiments/exp_6afa2ce533ba4e0a/BENCHMARK_REPORT.md)
+Published narrative report (tracked in-repo):  
+[`assets/live-benchmark/exp_6afa2ce533ba4e0a_BENCHMARK_REPORT.md`](assets/live-benchmark/exp_6afa2ce533ba4e0a_BENCHMARK_REPORT.md)
 
 No invented scores. Claude was **not** part of this run.
 
@@ -187,7 +187,7 @@ uv run githubbench experiment run \
 
 ## Related docs
 
-- Full narrative report: [BENCHMARK_REPORT.md](../results/experiments/exp_6afa2ce533ba4e0a/BENCHMARK_REPORT.md)
+- Full narrative report: [exp_6afa2ce533ba4e0a_BENCHMARK_REPORT.md](assets/live-benchmark/exp_6afa2ce533ba4e0a_BENCHMARK_REPORT.md)
 - [Evaluation](evaluation.md)
 - [Providers](providers.md)
 - [Showcase (dry-run)](showcase.md)

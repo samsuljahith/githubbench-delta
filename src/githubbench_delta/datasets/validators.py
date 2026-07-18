@@ -315,8 +315,17 @@ class CorpusQualityValidator:
                     errors.append(
                         f"Task {task.id}: fixture path missing: {task.repository.local_path}"
                     )
-                elif not (local / ".git").exists():
-                    errors.append(f"Task {task.id}: fixture is not a git repo: {local}")
+                elif not local.is_dir():
+                    errors.append(f"Task {task.id}: fixture path is not a directory: {local}")
+                # Vendored fixtures are plain directories (no nested .git) for cloneability.
+                elif not (
+                    (local / "README.md").is_file()
+                    or (local / "README").is_file()
+                    or (local / ".git").exists()
+                ):
+                    errors.append(
+                        f"Task {task.id}: fixture missing README or .git marker: {local}"
+                    )
 
             title_key = _normalize_text(task.title or "")
             if title_key:

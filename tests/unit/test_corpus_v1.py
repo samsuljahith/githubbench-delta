@@ -70,12 +70,12 @@ def test_schema_difficulty_score_and_prompt_version() -> None:
 
 
 def test_fixture_repos_exist() -> None:
+    """Fixtures are vendored as normal directories (no nested .git) for cloneability."""
     for name in FIXTURE_NAMES:
         path = FIXTURES / name
         assert path.is_dir(), name
-        assert (path / ".git").exists(), name
-        assert (path / "README.md").is_file() or (path / "README").is_file()
-        assert (path / "ISSUES.md").is_file()
+        assert (path / "README.md").is_file() or (path / "README").is_file(), name
+        assert (path / "ISSUES.md").is_file(), name
 
 
 def test_expected_tools_are_registered() -> None:
