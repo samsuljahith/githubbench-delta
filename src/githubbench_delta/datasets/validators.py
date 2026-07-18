@@ -323,9 +323,7 @@ class CorpusQualityValidator:
                     or (local / "README").is_file()
                     or (local / ".git").exists()
                 ):
-                    errors.append(
-                        f"Task {task.id}: fixture missing README or .git marker: {local}"
-                    )
+                    errors.append(f"Task {task.id}: fixture missing README or .git marker: {local}")
 
             title_key = _normalize_text(task.title or "")
             if title_key:
