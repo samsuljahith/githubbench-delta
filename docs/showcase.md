@@ -2,6 +2,9 @@
 
 Published example for GitHubBench-Delta (week showcase).
 
+> **Live scored results** (MiniCPM vs Codex) are documented in **[benchmark.md](benchmark.md)** for experiment `exp_6afa2ce533ba4e0a`.  
+> This page covers the separate **dry-run** UX demo (`exp_3c790a482f784d21`). Dry-run scores are not live model rankings.
+
 ## What was run
 
 | Field | Value |

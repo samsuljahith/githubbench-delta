@@ -1,5 +1,7 @@
 # Installation
 
+Onboarding hub: [index.md](index.md) · Next: [quickstart.md](quickstart.md) · Providers: [providers.md](providers.md)
+
 ## Requirements
 
 - Python **3.12** or **3.13** (`requires-python = ">=3.12,<3.14"`)
@@ -9,7 +11,7 @@
 ## Install with uv (recommended)
 
 ```bash
-git clone <repository-url> githubbench-delta
+git clone https://github.com/samsuljahith/githubbench-delta.git
 cd githubbench-delta
 uv sync --group dev
 uv run githubbench version
@@ -18,8 +20,10 @@ uv run githubbench version
 ## Install with pip
 
 ```bash
+git clone https://github.com/samsuljahith/githubbench-delta.git
+cd githubbench-delta
 python -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 githubbench version
 ```

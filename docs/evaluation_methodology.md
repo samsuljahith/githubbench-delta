@@ -1,5 +1,7 @@
 # GitHubBench-Delta Evaluation Methodology
 
+> **Start here for a shorter overview:** [evaluation.md](evaluation.md). This page is the formula reference.
+
 Eighteen production-oriented evaluators, each an independent pluggable class with configuration, scoring, and explainability.
 
 Scoring is implemented by the **Phase 4 Evaluation Engine**. All evaluators are deterministic (no LLM-as-a-judge). They operate only on `MetricContext` and never on a specific model provider.

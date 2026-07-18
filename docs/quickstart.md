@@ -1,5 +1,7 @@
 # Quick Start
 
+Docs hub: [index.md](index.md) · Install: [installation.md](installation.md) · Live results: [benchmark.md](benchmark.md)
+
 End-to-end dry-run path (no live LLM calls):
 
 ```bash

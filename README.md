@@ -1,153 +1,336 @@
 # GitHubBench-Delta
 
-Production-quality evaluation framework for comparing AI coding agents on real GitHub engineering tasks.
+[![CI](https://github.com/samsuljahith/githubbench-delta/actions/workflows/ci.yml/badge.svg)](https://github.com/samsuljahith/githubbench-delta/actions/workflows/ci.yml)
+[![Python 3.12 | 3.13](https://img.shields.io/badge/python-3.12%20%7C%203.13-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.1.0-informational.svg)](pyproject.toml)
+[![Docs](https://img.shields.io/badge/docs-index-purple.svg)](docs/index.md)
 
-**Agents:** MiniCPM (local via Ollama), Claude (Anthropic), Codex (OpenAI)
+**Production evaluation for AI coding agents on real GitHub engineering work.**
 
-**Methodology:** 18 first-class production evaluators (Task Resolution, Engineering Usefulness, Diff Minimality, Tool Economy, Unnecessary Tool Calls, Recovery Score, Planning Quality, Branch Safety, Blast Radius, Safe Failure, Grounding Ratio, Hallucinated API, Test Honesty, Calibration, Cross Trial Consistency, Reproducibility, Cost-Normalized Capability, Local-vs-Hosted Parity).
+GitHubBench-Delta runs local and hosted agents against a curated multi-language task corpus, records full trajectories, scores **18 deterministic methodology metrics**, and publishes results through a dashboard and report pipeline — so comparisons are evidence, not demos.
 
-## Status
+---
 
-| Phase | Focus | Status |
-|-------|--------|--------|
-| 1 | Scaffolding, config, interfaces, registries, CLI/API stubs | **Complete** |
-| 2 | Agent lifecycle, providers, tools, trajectory, event store | **Complete** |
-| 3 | Task/dataset framework, manifests, BenchmarkRunner | **Complete** |
-| 3.5 | Production 60-task corpus + fixtures + strict validation | **Complete** |
-| 4 | Evaluation engine (18 deterministic methodology metrics) | **Complete** |
-| 5 | Evaluation pipeline + ResultStore (JSONL/SQLite) | **Complete** |
-| 6 | Interactive dashboard (FastAPI + Plotly) | **Complete** |
-| 7 | Reporting & publication (MD/HTML/PDF/JSON/CSV) | **Complete** |
-| 8 | Production hardening (CI, docs, packaging, DX) | **Complete** |
+## Table of Contents
 
-## Requirements
+- [Why this project exists](#why-this-project-exists)
+- [Features](#features)
+- [Architecture overview](#architecture-overview)
+- [Screenshots](#screenshots)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Example benchmark command](#example-benchmark-command)
+- [Supported providers](#supported-providers)
+- [Evaluation methodology](#evaluation-methodology)
+- [18 GitHubBench-Delta metrics](#18-githubbench-delta-metrics)
+- [Repository structure](#repository-structure)
+- [Benchmark results](#benchmark-results)
+- [Future roadmap](#future-roadmap)
+- [Limitations](#limitations)
+- [Documentation](#documentation)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
 
-- Python **3.12** or **3.13**
-- [uv](https://github.com/astral-sh/uv)
+---
 
-## Install
+## Why this project exists
 
-```bash
-cd githubbench-delta
-uv sync --group dev
-uv run pre-commit install   # optional local hooks
+Coding-agent demos look impressive and rarely answer the questions that matter in engineering orgs:
+
+- Did the agent use the **right tools** in a sensible order?
+- Is the answer **grounded** in the repository, or hallucinated?
+- Did it stay **safe** (no destructive git / blast radius)?
+- What did it **cost**, and can a local model compete with a hosted one?
+
+GitHubBench-Delta turns those questions into a repeatable harness: fixed tasks, captured trajectories, deterministic scores, and artifacts you can audit.
+
+---
+
+## Features
+
+- **Multi-agent comparison** — MiniCPM (local / Ollama), Claude (Anthropic), Codex (OpenAI)
+- **Curated corpus** — 60-task `datasets/v1` across repository search, issue analysis, architecture understanding, and more (Python, TypeScript, Go, Rust, Java fixtures)
+- **18 methodology metrics** — correctness, trajectory, safety, grounding, reliability, efficiency (no LLM-as-judge)
+- **Full trajectories** — tool calls, timing, tokens, cost, sandbox events
+- **Resume-friendly pipeline** — experiment artifacts in JSON / JSONL / SQLite
+- **Dashboard** — FastAPI + Plotly read-only explorer over completed runs
+- **Reports** — Markdown, HTML, PDF, JSON, CSV publication formats
+- **Dry-run mode** — offline gold synthesis for CI and local smoke tests without API keys
+
+---
+
+## Architecture overview
+
+```mermaid
+flowchart LR
+  dataset[Dataset_v1] --> runner[ExperimentRunner]
+  runner --> agents[Agents_and_Tools]
+  agents --> traj[TrajectoryLogger]
+  traj --> evals[EvaluationEngine_18_metrics]
+  evals --> store[ResultStore]
+  store --> dash[Dashboard]
+  store --> reports[Reports]
 ```
 
-See [Installation](docs/installation.md). Copy `.env.example` to `.env` for live provider keys (not required for `--dry-run`).
+| Stage | Role |
+|-------|------|
+| Dataset | Versioned tasks, gold answers, expected tool calls, fixture repos |
+| ExperimentRunner | Orchestrates agents × tasks × trials with seed / concurrency / resume |
+| Agents & tools | Provider adapters + read-only GitHub tools |
+| Trajectory | Structured execution events for every run |
+| EvaluationEngine | Deterministic scoring via `MetricContext` |
+| ResultStore | Durable artifacts consumed by dashboard and reports |
 
-## Showcase
+Artifacts are the source of truth: the dashboard and reports **never** invoke agents.
 
-Published 6-task × 3-agent example (dashboard screenshots, HTML report, leaderboard CSV):
+Deep dive: [docs/architecture.md](docs/architecture.md).
 
-- [Showcase write-up](docs/showcase.md)
-- Screenshots: [docs/assets/screenshots/](docs/assets/screenshots/)
-- Example report: [docs/assets/example-report/](docs/assets/example-report/)
-- Benchmark summary: [docs/assets/example-benchmark/](docs/assets/example-benchmark/)
+---
+
+## Screenshots
+
+Dashboard UX (overview, leaderboard, agents, experiment detail). Live numeric results in this README are from experiment `exp_6afa2ce533ba4e0a` only.
 
 ![Dashboard overview](docs/assets/screenshots/overview.png)
 
-Architecture: [docs/architecture.md](docs/architecture.md). Install: [docs/installation.md](docs/installation.md).
+| Leaderboard | Agents |
+|-------------|--------|
+| ![Leaderboard](docs/assets/screenshots/leaderboard.png) | ![Agents](docs/assets/screenshots/agents.png) |
 
-**Note:** The multi-agent showcase artifacts were produced with `--dry-run` (reproducible offline). Live MiniCPM/Ollama was smoke-tested separately. Claude/Codex live runs need API keys in `.env`.
+![Experiment detail](docs/assets/screenshots/experiment_detail.png)
 
-## Quick start
+Assets: [`docs/assets/screenshots/`](docs/assets/screenshots/) (`overview.png`, `leaderboard.png`, `agents.png`, `experiment_detail.png`).
 
-```bash
-uv run githubbench dataset validate datasets/v1
-uv run githubbench experiment run \
-  --dataset datasets/v1 --agent codex \
-  --task gb-repository-search-001 --trials 1 --seed 42 --dry-run
-```
+---
 
-Full walkthrough: [Quick Start](docs/quickstart.md). Examples: [examples/](examples/README.md).
+## Installation
 
-## CLI
+**Requirements:** Python **3.12** or **3.13**, [uv](https://github.com/astral-sh/uv), Git.
 
 ```bash
+git clone https://github.com/samsuljahith/githubbench-delta.git
+cd githubbench-delta
+uv sync --group dev
 uv run githubbench version
-uv run githubbench config show
-uv run githubbench list agents
-uv run githubbench list tasks
-uv run githubbench list metrics
 ```
-
-See [CLI Reference](docs/cli.md).
-
-## API & dashboard
 
 ```bash
-uv run uvicorn githubbench_delta.api.app:create_app --factory --reload
+cp .env.example .env
+# Edit .env for live providers (not required for --dry-run)
 ```
 
-- `GET /health`
-- `GET /metrics/catalog`
-- `GET /dashboard/` and `/dashboard/api/*`
+Optional Docker:
 
-See [API](docs/api.md) and [Dashboard](docs/dashboard.md).
+```bash
+docker compose up api
+```
 
-## Datasets
+Full guide: [docs/installation.md](docs/installation.md).
+
+---
+
+## Quick Start
+
+Copy-paste dry-run path (no live LLM calls):
 
 ```bash
 uv run githubbench dataset validate datasets/v1
-uv run githubbench dataset validate datasets/v1 --strict
-uv run githubbench dataset manifest datasets/v1
+
+uv run githubbench experiment run \
+  --dataset datasets/v1 \
+  --agent codex \
+  --task gb-repository-search-001 \
+  --trials 1 \
+  --seed 42 \
+  --dry-run
+
+uv run githubbench report generate \
+  -e <experiment_id> \
+  -t ci_summary \
+  -f markdown
+
+uv run uvicorn githubbench_delta.api.app:create_app --factory --reload
+# open http://127.0.0.1:8000/dashboard/
 ```
 
-## Experiments
+More recipes: [docs/quickstart.md](docs/quickstart.md) · [examples/](examples/README.md).
+
+---
+
+## Example benchmark command
+
+Reproduce the **same task set** as the live showcase (requires provider keys / local Ollama for live mode). Remove `--dry-run` only when keys and quota are ready:
 
 ```bash
-uv run githubbench experiment run --dataset datasets/v1 --agent codex --task gb-repository-search-001 --dry-run
-uv run githubbench experiment status <experiment_id>
+uv run githubbench experiment run \
+  --dataset datasets/v1 \
+  --agent minicpm \
+  --agent codex \
+  --task gb-repository-search-001 \
+  --task gb-issue-analysis-001 \
+  --task gb-architecture-understanding-001 \
+  --task gb-architecture-understanding-002 \
+  --task gb-architecture-understanding-003 \
+  --task gb-architecture-understanding-005 \
+  --trials 1 \
+  --seed 42 \
+  --concurrency 1 \
+  --name showcase-v1-openai-local
 ```
 
-See [Pipeline](docs/pipeline.md).
+Published live results for this repository: experiment **`exp_6afa2ce533ba4e0a`**. See [docs/benchmark.md](docs/benchmark.md).
 
-## Reports
+---
 
-```bash
-uv run githubbench report generate -e <experiment_id> -t technical -f markdown -f html
-uv run githubbench report compare -b <baseline_id> -c <candidate_id> -f markdown
-uv run githubbench report export -e <experiment_id> -f csv
+## Supported providers
+
+| Agent | Provider | Default model | Env |
+|-------|----------|---------------|-----|
+| MiniCPM | Ollama (OpenAI-compatible) | `minicpm` (`MINICPM_MODEL`) | `MINICPM_BASE_URL`, `MINICPM_API_KEY` |
+| Claude | Anthropic | `claude-sonnet-4-20250514` | `ANTHROPIC_API_KEY` |
+| Codex | OpenAI | `gpt-4.1` | `OPENAI_API_KEY` |
+
+Optional: `GITHUB_TOKEN` for live GitHub-backed tools.
+
+Details: [docs/providers.md](docs/providers.md).
+
+---
+
+## Evaluation methodology
+
+All scores are **deterministic**. Evaluators consume a typed `MetricContext` (task, trajectory, gold, cost, peers) and never call a model as judge. Overall score is a weighted average of non-skipped metrics (default weight `1.0`).
+
+```mermaid
+flowchart TB
+  ctx[MetricContext] --> engine[EvaluationEngine]
+  engine --> m1[Correctness]
+  engine --> m2[Trajectory]
+  engine --> m3[Safety]
+  engine --> m4[Grounding]
+  engine --> m5[Reliability]
+  engine --> m6[Efficiency]
+  m1 --> agg[MetricAggregator]
+  m2 --> agg
+  m3 --> agg
+  m4 --> agg
+  m5 --> agg
+  m6 --> agg
+  agg --> result[EvaluationResult]
 ```
 
-See [Reports](docs/reports.md).
+Guide: [docs/evaluation.md](docs/evaluation.md) · Formulas: [docs/evaluation_methodology.md](docs/evaluation_methodology.md).
 
-## Tests & quality
+---
 
-```bash
-uv run ruff check src tests
-uv run ruff format --check src tests
-uv run mypy src
-uv run pytest --cov=githubbench_delta
-bash scripts/check_packaging.sh
+## 18 GitHubBench-Delta metrics
+
+| Group | Metric IDs |
+|-------|------------|
+| Correctness | `task_resolution` · `engineering_usefulness` · `diff_minimality` |
+| Trajectory | `tool_economy` · `unnecessary_tool_calls` · `planning_quality` |
+| Safety | `branch_safety` · `blast_radius` · `safe_failure` |
+| Grounding | `grounding_ratio` · `hallucinated_api` · `test_honesty` |
+| Reliability | `recovery_score` · `calibration` · `cross_trial_consistency` |
+| Efficiency | `reproducibility` · `cost_normalized_capability` · `local_vs_hosted_parity` |
+
+---
+
+## Repository structure
+
+```text
+githubbench-delta/
+├── src/githubbench_delta/     # Installable package
+│   ├── agents/                # MiniCPM, Claude, Codex
+│   ├── metrics/               # 18 methodology evaluators
+│   ├── pipeline/              # Experiments + ResultStore
+│   ├── dashboard/ · reports/  # Explore + publish
+│   ├── datasets/ · tasks/ · tools/ · cli/ · api/
+│   └── ...
+├── configs/                   # default / agents / metrics YAML
+├── datasets/v1/               # Corpus + multi-language fixtures
+├── results/experiments/       # Run artifacts (do not edit by hand)
+├── docs/                      # Guides, screenshots, examples
+├── examples/                  # Onboarding recipes
+├── tests/                     # Unit + integration
+└── .github/workflows/         # CI + release
 ```
+
+---
+
+## Benchmark results
+
+**Source of truth:** experiment [`exp_6afa2ce533ba4e0a`](results/experiments/exp_6afa2ce533ba4e0a/) only.  
+Full tables, costs, and caveats: **[docs/benchmark.md](docs/benchmark.md)** · Narrative: [BENCHMARK_REPORT.md](results/experiments/exp_6afa2ce533ba4e0a/BENCHMARK_REPORT.md).
+
+| | MiniCPM | Codex |
+|--|--------:|------:|
+| Mean overall score | 0.539 | **0.682** |
+| Agent success | **6 / 6** | 3 / 6 |
+| Task wins | 0 | **6** |
+| Mean latency | 7.31 s | 6.26 s |
+| Total cost | **$0.000000** | $0.033166 |
+| Tool calls | 5 | **19** |
+| Pipeline units | 12 / 12 completed | 12 / 12 completed |
+
+Codex led every task on overall score. Three Codex failures were OpenAI rate-limit / insufficient-quota errors. MiniCPM finished every unit at $0 but scored poorly on trajectory and `hallucinated_api`. Claude was **not** in this live run. This is a 6-task × 1-trial showcase — not a full 60-task ranking.
+
+---
+
+## Future roadmap
+
+Phases 1–8 (scaffolding through production hardening) are complete. Planned follow-ups:
+
+- Multi-trial live leaderboards (`trial_count ≥ 3`) for stable reproducibility
+- Live multi-agent runs including Claude (keys + quota)
+- Broader live coverage beyond the 6-task showcase
+- Stronger calibration when agents emit stated confidence
+- Continued dashboard / report UX polish
+
+History: [docs/phases.md](docs/phases.md).
+
+---
+
+## Limitations
+
+- The published **live** showcase is **6 tasks × 2 agents × 1 trial** — not a full 60-task ranking.
+- Codex results in `exp_6afa2ce533ba4e0a` were affected by provider **RPM / quota** limits.
+- Peer metrics such as `reproducibility` are weak with a single trial.
+- `calibration` skipped when agents do not state confidence.
+- Dry-run showcase artifacts ([docs/showcase.md](docs/showcase.md)) demonstrate pipeline UX; they are **not** live model rankings.
+- PDF report export may require system libraries (WeasyPrint).
+
+---
 
 ## Documentation
 
-- [Installation](docs/installation.md)
-- [Quick Start](docs/quickstart.md)
-- [Architecture](docs/architecture.md)
-- [Evaluation methodology](docs/evaluation_methodology.md)
-- [CLI](docs/cli.md) · [API](docs/api.md) · [Configuration](docs/configuration.md)
-- [Pipeline](docs/pipeline.md) · [Dashboard](docs/dashboard.md) · [Reports](docs/reports.md)
-- [Plugins](docs/plugins.md) · [Contributing](docs/contributing.md)
-- [Troubleshooting](docs/troubleshooting.md) · [FAQ](docs/faq.md) · [Release](docs/release.md)
-- [Phases](docs/phases.md)
-- [Engineering audit](docs/engineering_audit.md)
-- [Showcase](docs/showcase.md)
-- [Self-study notes](docs/self_study_notes.md)
-- [Mentor session prep](docs/mentor_session_prep.md)
+This **README** is the public entry point. The docs hub is **[docs/index.md](docs/index.md)**. Release readiness: **[RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md)**.
 
-## Layout
+| Doc | Description |
+|-----|-------------|
+| [Architecture](docs/architecture.md) | System design and package map |
+| [Evaluation](docs/evaluation.md) | How scoring works |
+| [Methodology formulas](docs/evaluation_methodology.md) | Deterministic metric formulas |
+| [Benchmark](docs/benchmark.md) | Live results for `exp_6afa2ce533ba4e0a` |
+| [Providers](docs/providers.md) | Agent backends and env vars |
+| [Installation](docs/installation.md) · [Quick Start](docs/quickstart.md) | Onboarding |
+| [CLI](docs/cli.md) · [API](docs/api.md) · [Pipeline](docs/pipeline.md) | Operations |
+| [Dashboard](docs/dashboard.md) · [Reports](docs/reports.md) | Explore and publish |
+| [Showcase (dry-run UX)](docs/showcase.md) | Offline multi-agent demo (not live rankings) |
+| [Contributing](docs/contributing.md) · [FAQ](docs/faq.md) · [Troubleshooting](docs/troubleshooting.md) | Community |
 
-```
-src/githubbench_delta/   # installable package
-configs/                 # default.yaml, agents.yaml, metrics.yaml, samples/
-datasets/ logs/ results/ reports/
-examples/ tests/ docs/
-.github/workflows/       # CI + release
-```
+---
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE).
+Apache License 2.0 — see [LICENSE](LICENSE).
+
+---
+
+## Acknowledgements
+
+Built with [uv](https://github.com/astral-sh/uv), [Typer](https://github.com/fastapi/typer), [FastAPI](https://github.com/fastapi/fastapi), [Plotly](https://github.com/plotly/plotly.py), and [Pydantic](https://github.com/pydantic/pydantic).
+
+Agent backends use [Ollama](https://ollama.com/), the [Anthropic](https://www.anthropic.com/) API, and the [OpenAI](https://openai.com/) API.
+
+Contributions welcome — see [docs/contributing.md](docs/contributing.md).

@@ -113,7 +113,7 @@ The following are **critical** if the project is marketed as production-safe for
 
 ## 4. Low priority improvements
 
-- Placeholder clone URL in `docs/installation.md`; homepage URL may not match actual remote
+- ~~Placeholder clone URL in `docs/installation.md`~~ (fixed — uses `https://github.com/samsuljahith/githubbench-delta.git`)
 - Historical “11 tasks” wording in `docs/phases.md` vs 60-task corpus
 - Category-only task subclasses with Phase 3 TODOs
 - `DistributedExecutor` TODO in `benchmark/runner.py` while Phase 5 marked complete

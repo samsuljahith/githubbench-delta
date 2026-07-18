@@ -7,8 +7,9 @@
 3. Dashboard: `uv run uvicorn githubbench_delta.api.app:create_app --factory --host 127.0.0.1 --port 8000`
 4. Your filled [`self_study_notes.md`](self_study_notes.md)
 5. Experiment ids:
-   - Showcase (dry-run multi-agent): `exp_3c790a482f784d21`
-   - Live MiniCPM smoke: `exp_ac0f374eeaff4c85`
+   - **Live MiniCPM vs Codex showcase:** `exp_6afa2ce533ba4e0a` ([benchmark.md](benchmark.md))
+   - Showcase (dry-run multi-agent UX): `exp_3c790a482f784d21`
+   - Live MiniCPM smoke (single task): `exp_ac0f374eeaff4c85`
 
 ## Agenda
 
@@ -23,9 +24,10 @@
 
 ## Honest framing (say this)
 
-- Published 6×3 showcase is **dry-run** for reproducibility without cloud keys.
-- Live Ollama path for MiniCPM was verified on one task.
-- Claude/Codex live comparison needs API keys; command is in [`showcase.md`](showcase.md).
+- Authoritative live leaderboard numbers are from **`exp_6afa2ce533ba4e0a`** (MiniCPM vs Codex); see [benchmark.md](benchmark.md).
+- The published 6×3 showcase (`exp_3c790a482f784d21`) is **dry-run** for pipeline/UX demos without cloud keys — not a live ranking.
+- Codex in the live showcase hit rate-limit / quota errors on 3/6 units.
+- Claude was not included in `exp_6afa2ce533ba4e0a`.
 
 ## Do not
 
