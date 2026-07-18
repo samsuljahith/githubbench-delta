@@ -1,0 +1,37 @@
+name: Bug report
+description: Report a defect in GitHubBench-Delta
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. For security issues, use [SECURITY.md](../SECURITY.md) instead.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Clear description of the problem
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Commands, configs, and expected vs actual behavior
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      placeholder: 0.1.0 or git SHA
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: 3.12.x
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / stack traces
+      render: text

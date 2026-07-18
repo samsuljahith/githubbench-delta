@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Experiments — GitHubBench-Delta{% endblock %}
+{% block content %}
+<h1>Experiments</h1>
+<p class="sub">Browse experiment manifests under results/experiments.</p>
+<div class="filters">
+  <input id="q" placeholder="Search…" />
+  <select id="status">
+    <option value="">All statuses</option>
+    <option>completed</option>
+    <option>running</option>
+    <option>failed</option>
+    <option>interrupted</option>
+    <option>pending</option>
+  </select>
+  <button id="reload">Apply</button>
+</div>
+<div class="panel">
+  <table>
+    <thead><tr><th>ID</th><th>Name</th><th>Status</th><th>Agents</th><th>Tasks</th><th>Score</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+async function load() {
+  const q = document.getElementById('q').value;
+  const status = document.getElementById('status').value;
+  const params = new URLSearchParams({page_size: '100', sort: 'updated_at', order: 'desc'});
+  if (q) params.set('q', q);
+  if (status) params.set('status', status);
+  const data = await (await fetch('/dashboard/api/experiments?' + params)).json();
+  document.getElementById('tbody').innerHTML = (data.items || []).map(e => `
+    <tr>
+      <td><a href="/dashboard/experiments/${e.experiment_id}">${e.experiment_id}</a></td>
+      <td>${e.name || ''}</td>
+      <td><span class="badge">${e.status}</span></td>
+      <td>${(e.agent_ids||[]).join(', ')}</td>
+      <td>${(e.task_ids||[]).length}</td>
+      <td>${e.mean_overall_score == null ? '—' : e.mean_overall_score.toFixed(3)}</td>
+    </tr>`).join('') || '<tr><td colspan="6">No experiments found</td></tr>';
+}
+document.getElementById('reload').onclick = load;
+load();
+</script>
+{% endblock %}

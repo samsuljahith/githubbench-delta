@@ -1,0 +1,39 @@
+{
+  "author": "GitHubBench-Delta Contributors",
+  "category_counts": {
+    "architecture_understanding": 6,
+    "bug_fix": 8,
+    "code_explanation": 6,
+    "code_refactoring": 5,
+    "commit_summary": 4,
+    "dead_code_detection": 4,
+    "documentation": 4,
+    "issue_analysis": 4,
+    "pull_request_review": 5,
+    "readme_generation": 4,
+    "repository_search": 6,
+    "unit_test_generation": 4
+  },
+  "content_hash": "ba101a4e03ccfb3ec7e5331f5226c29c6b5d16382cb93639c92ad8a11d3d4700",
+  "created_at": "2026-07-18T03:30:59.482601Z",
+  "dataset_version": "v1",
+  "description": "Production curated GitHub engineering corpus for GitHubBench-Delta (Phase 3.5). Exactly 60 tasks across 12 categories, backed by six local multi-language fixture repositories under datasets/fixtures/.\n",
+  "language_counts": {
+    "go": 11,
+    "java": 9,
+    "python": 21,
+    "rust": 8,
+    "typescript": 11
+  },
+  "license": "Apache-2.0",
+  "name": "githubbench-delta-v1",
+  "repositories": [
+    "https://github.com/example/billing-backend",
+    "https://github.com/example/docsearch-rag",
+    "https://github.com/example/inventoryapi",
+    "https://github.com/example/notifyrs",
+    "https://github.com/example/pulseboard",
+    "https://github.com/example/widgetcli"
+  ],
+  "task_count": 60
+}

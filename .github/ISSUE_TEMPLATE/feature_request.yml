@@ -1,0 +1,26 @@
+name: Feature request
+description: Suggest an improvement (no new evaluation metrics unless discussed)
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description: What gap does this fill?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope awareness
+      options:
+        - label: This does not require a new methodology metric without design review
+          required: false
+        - label: I am willing to help with docs/tests/CI if accepted
+          required: false

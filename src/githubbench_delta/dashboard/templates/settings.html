@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Settings — GitHubBench-Delta{% endblock %}
+{% block content %}
+<h1>Settings</h1>
+<p class="sub">Read-only dashboard configuration (no secrets).</p>
+<div class="panel"><pre id="settings"></pre></div>
+{% endblock %}
+{% block scripts %}
+<script>
+fetch('/dashboard/api/settings').then(r => r.json()).then(s => {
+  document.getElementById('settings').textContent = JSON.stringify(s, null, 2);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,34 @@
+# Minimal sample runtime overrides for local dry-run experiments.
+# Copy values into configs/default.yaml or point GITHUBBENCH_CONFIG_DIR at a
+# directory that merges with the standard agents.yaml / metrics.yaml files.
+#
+# Recommended local workflow:
+#   uv run githubbench experiment run \
+#     --dataset datasets/v1 \
+#     --agent codex \
+#     --task gb-repository-search-001 \
+#     --trials 1 --seed 42 --dry-run
+
+seed: 42
+trial_count: 1
+task_timeout_seconds: 120
+max_tool_calls: 20
+
+paths:
+  datasets: datasets
+  logs: logs
+  results: results
+  reports: reports
+
+storage:
+  sqlite_path: results/githubbench.db
+  duckdb_path: results/githubbench.duckdb
+
+observability:
+  structured_logging: true
+
+pipeline:
+  max_concurrency: 1
+  results_dir: results/experiments
+  resume: true
+  use_cache: true

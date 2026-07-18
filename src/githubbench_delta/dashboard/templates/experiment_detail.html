@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Experiment {{ experiment_id }} — GitHubBench-Delta{% endblock %}
+{% block content %}
+<h1>Experiment Details</h1>
+<p class="sub"><code>{{ experiment_id }}</code></p>
+<div class="cards" id="cards"></div>
+<div class="panel">
+  <h2>Artifacts</h2>
+  <ul id="artifacts"></ul>
+  <p>
+    <a id="export-json" href="#">Export JSON</a> ·
+    <a id="export-csv" href="#">Export CSV</a> ·
+    <a id="export-md" href="#">Export Markdown</a>
+  </p>
+</div>
+<div class="panel"><h2>Experiment manifest</h2><pre id="experiment"></pre></div>
+<div class="panel"><h2>Run manifest</h2><pre id="run"></pre></div>
+<div class="panel"><h2>Evaluation summary</h2><pre id="summary"></pre></div>
+{% endblock %}
+{% block scripts %}
+<script>
+const eid = {{ experiment_id|tojson }};
+async function load() {
+  const d = await (await fetch('/dashboard/api/experiments/' + eid)).json();
+  document.getElementById('cards').innerHTML = `
+    <div class="card"><div class="label">Status</div><div class="value">${d.experiment.status}</div></div>
+    <div class="card"><div class="label">Evaluations</div><div class="value">${d.summary.evaluation_count}</div></div>
+    <div class="card"><div class="label">Mean score</div><div class="value">${
+      d.summary.mean_overall_score == null ? '—' : Number(d.summary.mean_overall_score).toFixed(3)
+    }</div></div>`;
+  document.getElementById('artifacts').innerHTML =
+    (d.artifacts || []).map(a => `<li>${a}</li>`).join('') || '<li>None</li>';
+  document.getElementById('experiment').textContent = JSON.stringify(d.experiment, null, 2);
+  document.getElementById('run').textContent = JSON.stringify(d.run || {}, null, 2);
+  document.getElementById('summary').textContent = JSON.stringify(d.summary || {}, null, 2);
+  document.getElementById('export-json').href = `/dashboard/api/export/json?experiment_id=${eid}`;
+  document.getElementById('export-csv').href = `/dashboard/api/export/csv?experiment_id=${eid}`;
+  document.getElementById('export-md').href = `/dashboard/api/export/markdown?experiment_id=${eid}`;
+}
+load();
+</script>
+{% endblock %}

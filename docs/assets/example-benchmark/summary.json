@@ -1,0 +1,29 @@
+{
+  "experiment_id": "exp_3c790a482f784d21",
+  "name": "showcase-v1-6task",
+  "mode": "dry-run (gold-answer synthesis for multi-agent showcase)",
+  "live_minicpm_smoke_experiment_id": "exp_ac0f374eeaff4c85",
+  "live_note": "MiniCPM path exercised live via Ollama llama3.2:1b; Claude/Codex require API keys in .env for live multi-agent",
+  "seed": 42,
+  "trial_count": 1,
+  "agent_ids": [
+    "minicpm",
+    "claude",
+    "codex"
+  ],
+  "task_ids": [
+    "gb-repository-search-001",
+    "gb-issue-analysis-001",
+    "gb-architecture-understanding-001",
+    "gb-architecture-understanding-002",
+    "gb-architecture-understanding-003",
+    "gb-architecture-understanding-005"
+  ],
+  "units_done": 18,
+  "units_total": 18,
+  "mean_overall_by_agent": {
+    "minicpm": 0.86,
+    "claude": 0.86,
+    "codex": 0.86
+  }
+}

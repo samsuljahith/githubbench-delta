@@ -1,0 +1,9 @@
+# Default dataset roots for GitHubBench-Delta
+datasets_root: datasets
+default_version: v1
+compatible_versions:
+  - v1
+  - v2
+paths:
+  v1: datasets/v1
+  fixtures: datasets/fixtures

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ doc.title }}</title>
+  <link rel="stylesheet" href="{{ css_href | default('_assets/report.css') }}" />
+  <link rel="stylesheet" href="{{ branding_css_href | default('_assets/branding.css') }}" />
+  {% if not print_mode %}
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  {% endif %}
+</head>
+<body>
+  <header class="report-header">
+    {% if logo_href %}
+    <img class="logo" src="{{ logo_href }}" alt="{{ brand.product_name }}" />
+    {% endif %}
+    <div class="report-meta">{{ brand.product_name }}</div>
+    <h1>{{ doc.title }}</h1>
+    <div class="report-meta">
+      Generated {{ doc.generated_at }}
+      {% if doc.experiment_ids %} · Experiments: {{ doc.experiment_ids | join(', ') }}{% endif %}
+    </div>
+  </header>
+
+  {% for section in sections %}
+  <section id="{{ section.id }}">
+    <h2>{{ section.title }}</h2>
+    {% if section.summary %}<p class="summary">{{ section.summary }}</p>{% endif %}
+
+    {% for table in section.tables %}
+      {% if table.rows %}
+      <table>
+        <thead>
+          <tr>
+            {% for col in table.columns %}<th>{{ col }}</th>{% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in table.rows %}
+          <tr>
+            {% for col in table.columns %}
+            <td>{{ row.get(col, '') }}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    {% endfor %}
+
+    {% if section.notes %}
+    <ul class="notes">
+      {% for note in section.notes %}<li>{{ note }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+
+    {% for cid in section.chart_ids %}
+      {% set chart = charts.get(cid) %}
+      {% if chart %}
+      <div class="chart" id="chart-{{ cid }}">
+        <h3>{{ chart.title }}</h3>
+        {% if print_mode and chart.png_base64 %}
+        <img src="data:image/png;base64,{{ chart.png_base64 }}" alt="{{ chart.title }}" />
+        {% elif print_mode and chart.png_relpath %}
+        <img src="{{ chart.png_relpath }}" alt="{{ chart.title }}" />
+        {% elif not print_mode and chart.plotly_json %}
+        <div id="plotly-{{ cid }}" style="height:420px;"></div>
+        <script>
+          Plotly.newPlot(
+            "plotly-{{ cid }}",
+            {{ chart.plotly_json.data | tojson }},
+            {{ chart.plotly_json.layout | tojson }},
+            {responsive: true, displayModeBar: false}
+          );
+        </script>
+        {% elif chart.png_relpath %}
+        <img src="{{ chart.png_relpath }}" alt="{{ chart.title }}" />
+        {% endif %}
+      </div>
+      {% endif %}
+    {% endfor %}
+  </section>
+  {% endfor %}
+
+  <footer class="footer">{{ footer_text | default(brand.footer_text) }}</footer>
+</body>
+</html>

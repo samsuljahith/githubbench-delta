@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Metric Analysis — GitHubBench-Delta{% endblock %}
+{% block content %}
+<h1>Metric Analysis</h1>
+<p class="sub">All 18 methodology metrics — distributions, correlation, importance.</p>
+<div class="filters">
+  <select id="metric"></select>
+  <button id="reload">Refresh histogram</button>
+</div>
+<div class="panel"><div id="hist" class="chart"></div></div>
+<div class="panel"><div id="importance" class="chart"></div></div>
+<div class="panel"><div id="corr" class="chart" style="min-height:700px"></div></div>
+<div class="panel">
+  <h2>Summary</h2>
+  <table>
+    <thead><tr><th>Metric</th><th>Mean</th><th>Std</th><th>Min</th><th>Max</th><th>Importance</th><th>N</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+async function loadSummary() {
+  const stats = await (await fetch('/dashboard/api/metrics/summary')).json();
+  const sel = document.getElementById('metric');
+  sel.innerHTML = stats.map(s => `<option value="${s.metric_id}">${s.metric_id}</option>`).join('');
+  document.getElementById('tbody').innerHTML = stats.map(s => `
+    <tr>
+      <td>${s.metric_id}</td>
+      <td>${s.mean.toFixed(3)}</td>
+      <td>${s.std.toFixed(3)}</td>
+      <td>${s.min.toFixed(3)}</td>
+      <td>${s.max.toFixed(3)}</td>
+      <td>${s.importance.toFixed(3)}</td>
+      <td>${s.n}</td>
+    </tr>`).join('');
+  return stats;
+}
+async function loadCharts() {
+  const mid = document.getElementById('metric').value || 'task_resolution';
+  const hist = await (await fetch('/dashboard/api/charts/histogram?metric_id=' + encodeURIComponent(mid))).json();
+  Plotly.newPlot('hist', hist.data, hist.layout, {responsive: true, displayModeBar: false});
+  const imp = await (await fetch('/dashboard/api/charts/importance')).json();
+  Plotly.newPlot('importance', imp.data, imp.layout, {responsive: true, displayModeBar: false});
+  const corr = await (await fetch('/dashboard/api/charts/corr_heatmap')).json();
+  Plotly.newPlot('corr', corr.data, corr.layout, {responsive: true, displayModeBar: false});
+}
+document.getElementById('reload').onclick = loadCharts;
+loadSummary().then(loadCharts);
+</script>
+{% endblock %}

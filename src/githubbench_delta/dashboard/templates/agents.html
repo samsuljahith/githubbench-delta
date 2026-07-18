@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Agent Comparison — GitHubBench-Delta{% endblock %}
+{% block content %}
+<h1>Agent Comparison</h1>
+<p class="sub">MiniCPM / Claude / Codex aggregates from completed runs.</p>
+<div class="panel"><div id="radar" class="chart"></div></div>
+<div class="panel"><div id="bars" class="chart"></div></div>
+<div class="panel">
+  <h2>Metric means</h2>
+  <table>
+    <thead><tr><th>Agent</th><th>Metric</th><th>Mean</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+async function load() {
+  const radar = await (await fetch('/dashboard/api/charts/radar')).json();
+  Plotly.newPlot('radar', radar.data, radar.layout, {responsive: true, displayModeBar: false});
+  const bars = await (await fetch('/dashboard/api/charts/bars')).json();
+  Plotly.newPlot('bars', bars.data, bars.layout, {responsive: true, displayModeBar: false});
+  const cmp = await (await fetch('/dashboard/api/agents/compare')).json();
+  const rows = [];
+  for (const [agent, metrics] of Object.entries(cmp.metric_means || {})) {
+    for (const [mid, val] of Object.entries(metrics)) {
+      rows.push(`<tr><td>${agent}</td><td>${mid}</td><td>${val.toFixed(3)}</td></tr>`);
+    }
+  }
+  document.getElementById('tbody').innerHTML = rows.join('') || '<tr><td colspan="3">No data</td></tr>';
+}
+load();
+</script>
+{% endblock %}

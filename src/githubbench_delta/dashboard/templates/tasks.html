@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Task Analysis — GitHubBench-Delta{% endblock %}
+{% block content %}
+<h1>Task Analysis</h1>
+<p class="sub">Per-task breakdown with category / difficulty / language filters.</p>
+<div class="filters">
+  <input id="q" placeholder="Search task id" />
+  <input id="category" placeholder="category" />
+  <input id="language" placeholder="language" />
+  <input id="difficulty" placeholder="difficulty" />
+  <button id="reload">Apply</button>
+</div>
+<div class="panel">
+  <table>
+    <thead>
+      <tr><th>Task</th><th>Category</th><th>Difficulty</th><th>Language</th><th>Repo</th><th>Mean</th><th>N</th><th>Agents</th></tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+async function load() {
+  const params = new URLSearchParams({page_size: '200', sort: 'mean_score', order: 'desc'});
+  for (const id of ['q','category','language','difficulty']) {
+    const v = document.getElementById(id).value;
+    if (v) params.set(id, v);
+  }
+  const data = await (await fetch('/dashboard/api/tasks?' + params)).json();
+  document.getElementById('tbody').innerHTML = (data.items || []).map(t => `
+    <tr>
+      <td>${t.task_id}</td>
+      <td>${t.category || '—'}</td>
+      <td>${t.difficulty || '—'}</td>
+      <td>${t.language || '—'}</td>
+      <td>${t.repository || '—'}</td>
+      <td>${t.mean_score == null ? '—' : t.mean_score.toFixed(3)}</td>
+      <td>${t.n_evals}</td>
+      <td>${(t.agents||[]).join(', ')}</td>
+    </tr>`).join('') || '<tr><td colspan="8">No tasks</td></tr>';
+}
+document.getElementById('reload').onclick = load;
+load();
+</script>
+{% endblock %}

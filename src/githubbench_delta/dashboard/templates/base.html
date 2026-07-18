@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}GitHubBench-Delta{% endblock %}</title>
+  <link rel="stylesheet" href="/dashboard/static/dashboard.css" />
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <a class="brand" href="/dashboard/">GitHubBench-Delta</a>
+      <a href="/dashboard/" class="{% if active == 'overview' %}active{% endif %}">Overview</a>
+      <a href="/dashboard/experiments" class="{% if active == 'experiments' %}active{% endif %}">Experiments</a>
+      <a href="/dashboard/leaderboard" class="{% if active == 'leaderboard' %}active{% endif %}">Leaderboard</a>
+      <a href="/dashboard/agents" class="{% if active == 'agents' %}active{% endif %}">Agent Comparison</a>
+      <a href="/dashboard/tasks" class="{% if active == 'tasks' %}active{% endif %}">Task Analysis</a>
+      <a href="/dashboard/metrics" class="{% if active == 'metrics' %}active{% endif %}">Metric Analysis</a>
+      <a href="/dashboard/trajectories" class="{% if active == 'trajectories' %}active{% endif %}">Trajectory Viewer</a>
+      <a href="/dashboard/settings" class="{% if active == 'settings' %}active{% endif %}">Settings</a>
+    </nav>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

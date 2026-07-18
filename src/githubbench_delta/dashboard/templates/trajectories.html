@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Trajectory Viewer — GitHubBench-Delta{% endblock %}
+{% block content %}
+<h1>Trajectory Viewer</h1>
+<p class="sub">Plan, tool calls, events, retries, warnings, final output.</p>
+<div class="filters">
+  <select id="experiment"></select>
+  <select id="unit"></select>
+  <button id="reload">Load</button>
+</div>
+<div class="panel"><div id="timeline" class="chart" style="min-height:280px"></div></div>
+<div class="panel">
+  <h2>Details</h2>
+  <div id="meta"></div>
+  <h3>Plan</h3><pre id="plan"></pre>
+  <h3>Final output</h3><pre id="output"></pre>
+  <h3>Tool calls</h3><pre id="tools"></pre>
+  <h3>Steps</h3><div id="steps"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+async function loadExperiments() {
+  const data = await (await fetch('/dashboard/api/experiments?page_size=100')).json();
+  const sel = document.getElementById('experiment');
+  sel.innerHTML = (data.items || []).map(e =>
+    `<option value="${e.experiment_id}">${e.experiment_id} (${e.name || e.status})</option>`
+  ).join('');
+  if (sel.value) await loadUnits();
+}
+async function loadUnits() {
+  const eid = document.getElementById('experiment').value;
+  if (!eid) return;
+  const items = await (await fetch(`/dashboard/api/experiments/${eid}/trajectories`)).json();
+  document.getElementById('unit').innerHTML = items.map(t =>
+    `<option value="${t.unit_key}">${t.unit_key} (${t.step_count} steps)</option>`
+  ).join('') || '<option value="">No trajectories</option>';
+}
+async function loadDetail() {
+  const eid = document.getElementById('experiment').value;
+  const unit = document.getElementById('unit').value;
+  if (!eid || !unit) return;
+  const d = await (await fetch(`/dashboard/api/experiments/${eid}/trajectories/${encodeURIComponent(unit)}`)).json();
+  document.getElementById('meta').innerHTML =
+    `<p>Agent <strong>${d.agent_id}</strong> · Task <strong>${d.task_id}</strong> ·
+     Success <span class="badge">${d.success}</span> · Retries ${d.retries}</p>
+     ${d.error ? `<p>Error: ${d.error}</p>` : ''}
+     ${(d.warnings||[]).length ? `<p>Warnings: ${d.warnings.join('; ')}</p>` : ''}`;
+  document.getElementById('plan').textContent = d.plan || '(none)';
+  document.getElementById('output').textContent = d.final_output || '(empty)';
+  document.getElementById('tools').textContent = JSON.stringify(d.tool_calls || [], null, 2);
+  document.getElementById('steps').innerHTML = (d.steps || []).map((s, i) =>
+    `<div class="timeline-step"><strong>#${i} ${s.kind || 'step'}</strong>
+     <div>${(s.content || s.error || JSON.stringify(s.tool_call || {})).toString().slice(0, 400)}</div></div>`
+  ).join('') || '<p>No steps</p>';
+  const fig = await (await fetch(
+    `/dashboard/api/charts/timeline?experiment_id=${encodeURIComponent(eid)}&unit_key=${encodeURIComponent(unit)}`
+  )).json();
+  Plotly.newPlot('timeline', fig.data, fig.layout, {responsive: true, displayModeBar: false});
+}
+document.getElementById('experiment').onchange = loadUnits;
+document.getElementById('reload').onclick = loadDetail;
+loadExperiments();
+</script>
+{% endblock %}

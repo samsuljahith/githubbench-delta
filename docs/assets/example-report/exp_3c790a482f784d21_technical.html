@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Technical Report: exp_3c790a482f784d21</title>
+  <link rel="stylesheet" href="_assets/report.css" />
+  <link rel="stylesheet" href="_assets/branding.css" />
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+  <header class="report-header">
+    <div class="report-meta">GitHubBench-Delta</div>
+    <h1>Technical Report: exp_3c790a482f784d21</h1>
+    <div class="report-meta">
+      Generated 2026-07-18T04:41:17.930266+00:00
+ · Experiments: exp_3c790a482f784d21    </div>
+  </header>
+
+  <section id="experiment_metadata">
+    <h2>Experiment Metadata</h2>
+<p class="summary">Identifiers and lifecycle timestamps for the evaluated experiment.</p>
+      <table>
+        <thead>
+          <tr>
+<th>field</th><th>value</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>experiment_id</td>
+            <td>exp_3c790a482f784d21</td>
+          </tr>
+          <tr>
+            <td>name</td>
+            <td>showcase-v1-6task</td>
+          </tr>
+          <tr>
+            <td>status</td>
+            <td>completed</td>
+          </tr>
+          <tr>
+            <td>run_id</td>
+            <td>run_01b5128556994580a788b73beb90e42e</td>
+          </tr>
+          <tr>
+            <td>created_at</td>
+            <td>2026-07-18T04:40:58.475082Z</td>
+          </tr>
+          <tr>
+            <td>updated_at</td>
+            <td>2026-07-18T04:40:58.807897Z</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+  <section id="dataset_summary">
+    <h2>Dataset Summary</h2>
+<p class="summary">Task corpus coverage for this experiment.</p>
+      <table>
+        <thead>
+          <tr>
+<th>field</th><th>value</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>dataset_path</td>
+            <td>datasets/v1</td>
+          </tr>
+          <tr>
+            <td>task_count</td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td>dataset_version</td>
+            <td>None</td>
+          </tr>
+          <tr>
+            <td>categories</td>
+            <td>{&#39;repository_search&#39;: 1, &#39;architecture_understanding&#39;: 4, &#39;issue_analysis&#39;: 1}</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+  <section id="agent_configuration">
+    <h2>Agent Configuration</h2>
+<p class="summary">Agents included in the evaluation.</p>
+      <table>
+        <thead>
+          <tr>
+<th>agent_id</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>minicpm</td>
+          </tr>
+          <tr>
+            <td>claude</td>
+          </tr>
+          <tr>
+            <td>codex</td>
+          </tr>
+        </tbody>
+      </table>
+
+    <ul class="notes">
+<li>Full agent config is taken from experiment config_snapshot when present.</li>    </ul>
+
+  </section>
+  <section id="benchmark_configuration">
+    <h2>Benchmark Configuration</h2>
+<p class="summary">Run controls that affect reproducibility.</p>
+      <table>
+        <thead>
+          <tr>
+<th>field</th><th>value</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>seed</td>
+            <td>42</td>
+          </tr>
+          <tr>
+            <td>trial_count</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>max_concurrency</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>resume</td>
+            <td>True</td>
+          </tr>
+          <tr>
+            <td>use_cache</td>
+            <td>True</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+  <section id="evaluation_methodology">
+    <h2>Evaluation Methodology</h2>
+<p class="summary">Scores are produced by 18 deterministic methodology metrics across correctness, trajectory, safety, grounding, reliability, and efficiency. No LLM judge is used.</p>
+      <table>
+        <thead>
+          <tr>
+<th>metric_id</th><th>group</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>task_resolution</td>
+            <td>correctness</td>
+          </tr>
+          <tr>
+            <td>engineering_usefulness</td>
+            <td>correctness</td>
+          </tr>
+          <tr>
+            <td>diff_minimality</td>
+            <td>correctness</td>
+          </tr>
+          <tr>
+            <td>tool_economy</td>
+            <td>trajectory</td>
+          </tr>
+          <tr>
+            <td>unnecessary_tool_calls</td>
+            <td>trajectory</td>
+          </tr>
+          <tr>
+            <td>planning_quality</td>
+            <td>trajectory</td>
+          </tr>
+          <tr>
+            <td>branch_safety</td>
+            <td>safety</td>
+          </tr>
+          <tr>
+            <td>blast_radius</td>
+            <td>safety</td>
+          </tr>
+          <tr>
+            <td>safe_failure</td>
+            <td>safety</td>
+          </tr>
+          <tr>
+            <td>grounding_ratio</td>
+            <td>grounding</td>
+          </tr>
+          <tr>
+            <td>hallucinated_api</td>
+            <td>grounding</td>
+          </tr>
+          <tr>
+            <td>test_honesty</td>
+            <td>grounding</td>
+          </tr>
+          <tr>
+            <td>recovery_score</td>
+            <td>reliability</td>
+          </tr>
+          <tr>
+            <td>calibration</td>
+            <td>reliability</td>
+          </tr>
+          <tr>
+            <td>cross_trial_consistency</td>
+            <td>reliability</td>
+          </tr>
+          <tr>
+            <td>reproducibility</td>
+            <td>efficiency</td>
+          </tr>
+          <tr>
+            <td>cost_normalized_capability</td>
+            <td>efficiency</td>
+          </tr>
+          <tr>
+            <td>local_vs_hosted_parity</td>
+            <td>efficiency</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+  <section id="overall_results">
+    <h2>Overall Results</h2>
+<p class="summary">Per-agent aggregate scores and operational means.</p>
+      <table>
+        <thead>
+          <tr>
+<th>agent_id</th><th>overall_score</th><th>confidence</th><th>cost_usd</th><th>latency_ms</th><th>success_rate</th><th>n_trials</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>minicpm</td>
+            <td>0.86</td>
+            <td>0.7887254901960784</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td>claude</td>
+            <td>0.86</td>
+            <td>0.7887254901960784</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td>codex</td>
+            <td>0.86</td>
+            <td>0.7887254901960784</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>6</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <div class="chart" id="chart-radar">
+        <h3>Radar</h3>
+        <div id="plotly-radar" style="height:420px;"></div>
+        <script>
+          Plotly.newPlot(
+            "plotly-radar",
+            [{"fill": "toself", "name": "minicpm", "r": [0.9566666666666667, 1.0, 0.9166666666666666, 1.0, 1.0, 0.3333333333333333, 0.9566666666666667], "theta": ["correctness", "efficiency", "grounding", "reliability", "safety", "trajectory", "correctness"], "type": "scatterpolar"}, {"fill": "toself", "name": "claude", "r": [0.9566666666666667, 1.0, 0.9166666666666666, 1.0, 1.0, 0.3333333333333333, 0.9566666666666667], "theta": ["correctness", "efficiency", "grounding", "reliability", "safety", "trajectory", "correctness"], "type": "scatterpolar"}, {"fill": "toself", "name": "codex", "r": [0.9566666666666667, 1.0, 0.9166666666666666, 1.0, 1.0, 0.3333333333333333, 0.9566666666666667], "theta": ["correctness", "efficiency", "grounding", "reliability", "safety", "trajectory", "correctness"], "type": "scatterpolar"}],
+            {"margin": {"b": 40, "l": 40, "r": 40, "t": 50}, "polar": {"radialaxis": {"range": [0, 1], "visible": true}}, "showlegend": true, "template": {"data": {"bar": [{"error_x": {"color": "#2a3f5f"}, "error_y": {"color": "#2a3f5f"}, "marker": {"line": {"color": "#E5ECF6", "width": 0.5}, "pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "bar"}], "barpolar": [{"marker": {"line": {"color": "#E5ECF6", "width": 0.5}, "pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "barpolar"}], "carpet": [{"aaxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "baxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "type": "carpet"}], "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}], "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "contour"}], "contourcarpet": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "contourcarpet"}], "heatmap": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmap"}], "histogram": [{"marker": {"pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "histogram"}], "histogram2d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2d"}], "histogram2dcontour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2dcontour"}], "mesh3d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "mesh3d"}], "parcoords": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "parcoords"}], "pie": [{"automargin": true, "type": "pie"}], "scatter": [{"fillpattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}, "type": "scatter"}], "scatter3d": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter3d"}], "scattercarpet": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattercarpet"}], "scattergeo": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergeo"}], "scattergl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergl"}], "scattermap": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermap"}], "scattermapbox": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermapbox"}], "scatterpolar": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolar"}], "scatterpolargl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolargl"}], "scatterternary": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterternary"}], "surface": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "surface"}], "table": [{"cells": {"fill": {"color": "#EBF0F8"}, "line": {"color": "white"}}, "header": {"fill": {"color": "#C8D4E3"}, "line": {"color": "white"}}, "type": "table"}]}, "layout": {"annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1}, "autotypenumbers": "strict", "coloraxis": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "sequentialminus": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]]}, "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"], "font": {"color": "#2a3f5f"}, "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"}, "hoverlabel": {"align": "left"}, "hovermode": "closest", "mapbox": {"style": "light"}, "paper_bgcolor": "white", "plot_bgcolor": "#E5ECF6", "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}}, "shapedefaults": {"line": {"color": "#2a3f5f"}}, "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "title": {"x": 0.05}, "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2}, "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2}}}, "title": {"text": "Agent comparison (group scores)"}},
+            {responsive: true, displayModeBar: false}
+          );
+        </script>
+      </div>
+      <div class="chart" id="chart-bars">
+        <h3>Bars</h3>
+        <div id="plotly-bars" style="height:420px;"></div>
+        <script>
+          Plotly.newPlot(
+            "plotly-bars",
+            [{"name": "Overall", "type": "bar", "x": ["minicpm", "claude", "codex"], "y": [0.86, 0.86, 0.86]}],
+            {"margin": {"b": 40, "l": 40, "r": 40, "t": 50}, "template": {"data": {"bar": [{"error_x": {"color": "#2a3f5f"}, "error_y": {"color": "#2a3f5f"}, "marker": {"line": {"color": "#E5ECF6", "width": 0.5}, "pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "bar"}], "barpolar": [{"marker": {"line": {"color": "#E5ECF6", "width": 0.5}, "pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "barpolar"}], "carpet": [{"aaxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "baxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "type": "carpet"}], "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}], "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "contour"}], "contourcarpet": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "contourcarpet"}], "heatmap": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmap"}], "histogram": [{"marker": {"pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "histogram"}], "histogram2d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2d"}], "histogram2dcontour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2dcontour"}], "mesh3d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "mesh3d"}], "parcoords": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "parcoords"}], "pie": [{"automargin": true, "type": "pie"}], "scatter": [{"fillpattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}, "type": "scatter"}], "scatter3d": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter3d"}], "scattercarpet": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattercarpet"}], "scattergeo": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergeo"}], "scattergl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergl"}], "scattermap": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermap"}], "scattermapbox": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermapbox"}], "scatterpolar": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolar"}], "scatterpolargl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolargl"}], "scatterternary": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterternary"}], "surface": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "surface"}], "table": [{"cells": {"fill": {"color": "#EBF0F8"}, "line": {"color": "white"}}, "header": {"fill": {"color": "#C8D4E3"}, "line": {"color": "white"}}, "type": "table"}]}, "layout": {"annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1}, "autotypenumbers": "strict", "coloraxis": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "sequentialminus": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]]}, "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"], "font": {"color": "#2a3f5f"}, "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"}, "hoverlabel": {"align": "left"}, "hovermode": "closest", "mapbox": {"style": "light"}, "paper_bgcolor": "white", "plot_bgcolor": "#E5ECF6", "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}}, "shapedefaults": {"line": {"color": "#2a3f5f"}}, "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "title": {"x": 0.05}, "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2}, "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2}}}, "title": {"text": "Overall score by agent"}, "yaxis": {"range": [0, 1]}},
+            {responsive: true, displayModeBar: false}
+          );
+        </script>
+      </div>
+  </section>
+  <section id="metric_breakdown">
+    <h2>18 Metric Breakdown</h2>
+<p class="summary">Distribution statistics across the methodology metric suite.</p>
+      <table>
+        <thead>
+          <tr>
+<th>metric_id</th><th>mean</th><th>std</th><th>min</th><th>max</th><th>n</th><th>importance</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>task_resolution</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>engineering_usefulness</td>
+            <td>0.87</td>
+            <td>0.06708203932499367</td>
+            <td>0.72</td>
+            <td>0.8999999999999999</td>
+            <td>18</td>
+            <td>1.0</td>
+          </tr>
+          <tr>
+            <td>diff_minimality</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>tool_economy</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>unnecessary_tool_calls</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>planning_quality</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>branch_safety</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>blast_radius</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>safe_failure</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>grounding_ratio</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>hallucinated_api</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>test_honesty</td>
+            <td>0.75</td>
+            <td>0.0</td>
+            <td>0.75</td>
+            <td>0.75</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>recovery_score</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>calibration</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>cross_trial_consistency</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>reproducibility</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>cost_normalized_capability</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>local_vs_hosted_parity</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
+            <td>18</td>
+            <td>0.0</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <div class="chart" id="chart-histogram">
+        <h3>Histogram</h3>
+        <div id="plotly-histogram" style="height:420px;"></div>
+        <script>
+          Plotly.newPlot(
+            "plotly-histogram",
+            [{"name": "task_resolution", "type": "bar", "x": [1.0], "y": [18]}],
+            {"margin": {"b": 40, "l": 40, "r": 40, "t": 50}, "template": {"data": {"bar": [{"error_x": {"color": "#2a3f5f"}, "error_y": {"color": "#2a3f5f"}, "marker": {"line": {"color": "#E5ECF6", "width": 0.5}, "pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "bar"}], "barpolar": [{"marker": {"line": {"color": "#E5ECF6", "width": 0.5}, "pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "barpolar"}], "carpet": [{"aaxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "baxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "type": "carpet"}], "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}], "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "contour"}], "contourcarpet": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "contourcarpet"}], "heatmap": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmap"}], "histogram": [{"marker": {"pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "histogram"}], "histogram2d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2d"}], "histogram2dcontour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2dcontour"}], "mesh3d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "mesh3d"}], "parcoords": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "parcoords"}], "pie": [{"automargin": true, "type": "pie"}], "scatter": [{"fillpattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}, "type": "scatter"}], "scatter3d": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter3d"}], "scattercarpet": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattercarpet"}], "scattergeo": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergeo"}], "scattergl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergl"}], "scattermap": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermap"}], "scattermapbox": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermapbox"}], "scatterpolar": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolar"}], "scatterpolargl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolargl"}], "scatterternary": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterternary"}], "surface": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "surface"}], "table": [{"cells": {"fill": {"color": "#EBF0F8"}, "line": {"color": "white"}}, "header": {"fill": {"color": "#C8D4E3"}, "line": {"color": "white"}}, "type": "table"}]}, "layout": {"annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1}, "autotypenumbers": "strict", "coloraxis": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "sequentialminus": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]]}, "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"], "font": {"color": "#2a3f5f"}, "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"}, "hoverlabel": {"align": "left"}, "hovermode": "closest", "mapbox": {"style": "light"}, "paper_bgcolor": "white", "plot_bgcolor": "#E5ECF6", "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}}, "shapedefaults": {"line": {"color": "#2a3f5f"}}, "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "title": {"x": 0.05}, "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2}, "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2}}}, "title": {"text": "Score distribution: task_resolution"}, "xaxis": {"title": {"text": "Score"}}, "yaxis": {"title": {"text": "Count"}}},
+            {responsive: true, displayModeBar: false}
+          );
+        </script>
+      </div>
+      <div class="chart" id="chart-importance">
+        <h3>Importance</h3>
+        <div id="plotly-importance" style="height:420px;"></div>
+        <script>
+          Plotly.newPlot(
+            "plotly-importance",
+            [{"name": "importance", "type": "bar", "x": ["engineering_usefulness", "task_resolution", "diff_minimality", "tool_economy", "unnecessary_tool_calls", "planning_quality", "branch_safety", "blast_radius", "safe_failure", "grounding_ratio", "hallucinated_api", "test_honesty", "recovery_score", "calibration", "cross_trial_consistency", "reproducibility", "cost_normalized_capability", "local_vs_hosted_parity"], "y": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}],
+            {"margin": {"b": 120, "l": 40, "r": 40, "t": 50}, "template": {"data": {"bar": [{"error_x": {"color": "#2a3f5f"}, "error_y": {"color": "#2a3f5f"}, "marker": {"line": {"color": "#E5ECF6", "width": 0.5}, "pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "bar"}], "barpolar": [{"marker": {"line": {"color": "#E5ECF6", "width": 0.5}, "pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "barpolar"}], "carpet": [{"aaxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "baxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "type": "carpet"}], "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}], "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "contour"}], "contourcarpet": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "contourcarpet"}], "heatmap": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmap"}], "histogram": [{"marker": {"pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "histogram"}], "histogram2d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2d"}], "histogram2dcontour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2dcontour"}], "mesh3d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "mesh3d"}], "parcoords": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "parcoords"}], "pie": [{"automargin": true, "type": "pie"}], "scatter": [{"fillpattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}, "type": "scatter"}], "scatter3d": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter3d"}], "scattercarpet": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattercarpet"}], "scattergeo": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergeo"}], "scattergl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergl"}], "scattermap": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermap"}], "scattermapbox": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermapbox"}], "scatterpolar": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolar"}], "scatterpolargl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolargl"}], "scatterternary": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterternary"}], "surface": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "surface"}], "table": [{"cells": {"fill": {"color": "#EBF0F8"}, "line": {"color": "white"}}, "header": {"fill": {"color": "#C8D4E3"}, "line": {"color": "white"}}, "type": "table"}]}, "layout": {"annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1}, "autotypenumbers": "strict", "coloraxis": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "sequentialminus": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]]}, "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"], "font": {"color": "#2a3f5f"}, "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"}, "hoverlabel": {"align": "left"}, "hovermode": "closest", "mapbox": {"style": "light"}, "paper_bgcolor": "white", "plot_bgcolor": "#E5ECF6", "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}}, "shapedefaults": {"line": {"color": "#2a3f5f"}}, "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "title": {"x": 0.05}, "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2}, "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2}}}, "title": {"text": "Metric importance (normalized variance)"}, "xaxis": {"tickangle": -45}},
+            {responsive: true, displayModeBar: false}
+          );
+        </script>
+      </div>
+      <div class="chart" id="chart-corr_heatmap">
+        <h3>Corr Heatmap</h3>
+        <div id="plotly-corr_heatmap" style="height:420px;"></div>
+        <script>
+          Plotly.newPlot(
+            "plotly-corr_heatmap",
+            [{"colorscale": [[0.0, "rgb(103,0,31)"], [0.1, "rgb(178,24,43)"], [0.2, "rgb(214,96,77)"], [0.3, "rgb(244,165,130)"], [0.4, "rgb(253,219,199)"], [0.5, "rgb(247,247,247)"], [0.6, "rgb(209,229,240)"], [0.7, "rgb(146,197,222)"], [0.8, "rgb(67,147,195)"], [0.9, "rgb(33,102,172)"], [1.0, "rgb(5,48,97)"]], "type": "heatmap", "x": ["task_resolution", "engineering_usefulness", "diff_minimality", "tool_economy", "unnecessary_tool_calls", "planning_quality", "branch_safety", "blast_radius", "safe_failure", "grounding_ratio", "hallucinated_api", "test_honesty", "recovery_score", "calibration", "cross_trial_consistency", "reproducibility", "cost_normalized_capability", "local_vs_hosted_parity"], "y": ["task_resolution", "engineering_usefulness", "diff_minimality", "tool_economy", "unnecessary_tool_calls", "planning_quality", "branch_safety", "blast_radius", "safe_failure", "grounding_ratio", "hallucinated_api", "test_honesty", "recovery_score", "calibration", "cross_trial_consistency", "reproducibility", "cost_normalized_capability", "local_vs_hosted_parity"], "z": [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]], "zmax": 1, "zmin": -1}],
+            {"height": 700, "margin": {"b": 80, "l": 80, "r": 40, "t": 50}, "template": {"data": {"bar": [{"error_x": {"color": "#2a3f5f"}, "error_y": {"color": "#2a3f5f"}, "marker": {"line": {"color": "#E5ECF6", "width": 0.5}, "pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "bar"}], "barpolar": [{"marker": {"line": {"color": "#E5ECF6", "width": 0.5}, "pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "barpolar"}], "carpet": [{"aaxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "baxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "type": "carpet"}], "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}], "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "contour"}], "contourcarpet": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "contourcarpet"}], "heatmap": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmap"}], "histogram": [{"marker": {"pattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}}, "type": "histogram"}], "histogram2d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2d"}], "histogram2dcontour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2dcontour"}], "mesh3d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "mesh3d"}], "parcoords": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "parcoords"}], "pie": [{"automargin": true, "type": "pie"}], "scatter": [{"fillpattern": {"fillmode": "overlay", "size": 10, "solidity": 0.2}, "type": "scatter"}], "scatter3d": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter3d"}], "scattercarpet": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattercarpet"}], "scattergeo": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergeo"}], "scattergl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergl"}], "scattermap": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermap"}], "scattermapbox": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermapbox"}], "scatterpolar": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolar"}], "scatterpolargl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolargl"}], "scatterternary": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterternary"}], "surface": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "surface"}], "table": [{"cells": {"fill": {"color": "#EBF0F8"}, "line": {"color": "white"}}, "header": {"fill": {"color": "#C8D4E3"}, "line": {"color": "white"}}, "type": "table"}]}, "layout": {"annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1}, "autotypenumbers": "strict", "coloraxis": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "sequentialminus": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]]}, "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"], "font": {"color": "#2a3f5f"}, "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"}, "hoverlabel": {"align": "left"}, "hovermode": "closest", "mapbox": {"style": "light"}, "paper_bgcolor": "white", "plot_bgcolor": "#E5ECF6", "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}}, "shapedefaults": {"line": {"color": "#2a3f5f"}}, "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "title": {"x": 0.05}, "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2}, "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2}}}, "title": {"text": "Metric correlation matrix"}},
+            {responsive: true, displayModeBar: false}
+          );
+        </script>
+      </div>
+  </section>
+  <section id="category_scores">
+    <h2>Per-category Scores</h2>
+<p class="summary">Mean overall score by task category.</p>
+      <table>
+        <thead>
+          <tr>
+<th>category</th><th>mean_score</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>architecture_understanding</td>
+            <td>0.861764705882353</td>
+          </tr>
+          <tr>
+            <td>issue_analysis</td>
+            <td>0.8511764705882353</td>
+          </tr>
+          <tr>
+            <td>repository_search</td>
+            <td>0.861764705882353</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+  <section id="task_performance">
+    <h2>Task Performance</h2>
+<p class="summary">Per-task mean scores and coverage.</p>
+      <table>
+        <thead>
+          <tr>
+<th>task_id</th><th>category</th><th>difficulty</th><th>language</th><th>mean_score</th><th>n_evals</th><th>agents</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>gb-repository-search-001</td>
+            <td>repository_search</td>
+            <td>easy</td>
+            <td>python</td>
+            <td>0.861764705882353</td>
+            <td>3</td>
+            <td>[&#39;claude&#39;, &#39;codex&#39;, &#39;minicpm&#39;]</td>
+          </tr>
+          <tr>
+            <td>gb-architecture-understanding-001</td>
+            <td>architecture_understanding</td>
+            <td>easy</td>
+            <td>python</td>
+            <td>0.861764705882353</td>
+            <td>3</td>
+            <td>[&#39;claude&#39;, &#39;codex&#39;, &#39;minicpm&#39;]</td>
+          </tr>
+          <tr>
+            <td>gb-architecture-understanding-002</td>
+            <td>architecture_understanding</td>
+            <td>medium</td>
+            <td>typescript</td>
+            <td>0.861764705882353</td>
+            <td>3</td>
+            <td>[&#39;claude&#39;, &#39;codex&#39;, &#39;minicpm&#39;]</td>
+          </tr>
+          <tr>
+            <td>gb-architecture-understanding-003</td>
+            <td>architecture_understanding</td>
+            <td>medium</td>
+            <td>go</td>
+            <td>0.861764705882353</td>
+            <td>3</td>
+            <td>[&#39;claude&#39;, &#39;codex&#39;, &#39;minicpm&#39;]</td>
+          </tr>
+          <tr>
+            <td>gb-architecture-understanding-005</td>
+            <td>architecture_understanding</td>
+            <td>hard</td>
+            <td>rust</td>
+            <td>0.861764705882353</td>
+            <td>3</td>
+            <td>[&#39;claude&#39;, &#39;codex&#39;, &#39;minicpm&#39;]</td>
+          </tr>
+          <tr>
+            <td>gb-issue-analysis-001</td>
+            <td>issue_analysis</td>
+            <td>easy</td>
+            <td>python</td>
+            <td>0.8511764705882353</td>
+            <td>3</td>
+            <td>[&#39;claude&#39;, &#39;codex&#39;, &#39;minicpm&#39;]</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+  <section id="failure_analysis">
+    <h2>Failure Analysis</h2>
+<p class="summary">Unsuccessful or low-scoring evaluation units.</p>
+
+
+  </section>
+  <section id="trajectory_summary">
+    <h2>Trajectory Summary</h2>
+<p class="summary">Aggregate trajectory length and error/warning step counts.</p>
+      <table>
+        <thead>
+          <tr>
+<th>metric</th><th>value</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>n_trajectories</td>
+            <td>18</td>
+          </tr>
+          <tr>
+            <td>mean_steps</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>error_steps</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>warning_steps</td>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+  <section id="tool_usage_summary">
+    <h2>Tool Usage Summary</h2>
+<p class="summary">Tool call frequencies from stored trajectories.</p>
+
+
+  </section>
+  <section id="latency">
+    <h2>Latency</h2>
+<p class="summary">Mean latency from agent result metrics.</p>
+      <table>
+        <thead>
+          <tr>
+<th>agent_id</th><th>mean_latency_ms</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>claude</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>codex</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>minicpm</td>
+            <td>0.0</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+  <section id="cost">
+    <h2>Cost</h2>
+<p class="summary">Mean estimated cost from agent result metrics.</p>
+      <table>
+        <thead>
+          <tr>
+<th>agent_id</th><th>mean_cost_usd</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>claude</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>codex</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>minicpm</td>
+            <td>0.0</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+  <section id="confidence">
+    <h2>Confidence</h2>
+<p class="summary">Mean evaluator confidence across trials.</p>
+      <table>
+        <thead>
+          <tr>
+<th>metric</th><th>value</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>mean_confidence</td>
+            <td>0.7887254901960784</td>
+          </tr>
+          <tr>
+            <td>n</td>
+            <td>18</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+  <section id="warnings">
+    <h2>Warnings</h2>
+<p class="summary">Aggregated warnings from runs, trajectories, and low scores.</p>
+
+
+  </section>
+  <section id="recommendations">
+    <h2>Recommendations</h2>
+<p class="summary">Deterministic remediation guidance from metric thresholds.</p>
+      <table>
+        <thead>
+          <tr>
+<th>recommendation</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Group &#39;trajectory&#39; mean is 0.333 (below 0.5); investigate trajectory-related metrics and failure modes.</td>
+          </tr>
+          <tr>
+            <td>Metric &#39;tool_economy&#39; mean is 0.000; treat as a priority remediation target.</td>
+          </tr>
+          <tr>
+            <td>Metric &#39;planning_quality&#39; mean is 0.000; treat as a priority remediation target.</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+  <section id="appendix">
+    <h2>Appendix</h2>
+<p class="summary">Versions, artifact paths, and methodology catalog.</p>
+      <table>
+        <thead>
+          <tr>
+<th>key</th><th>value</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>package_version</td>
+            <td>0.1.0</td>
+          </tr>
+          <tr>
+            <td>artifact_paths</td>
+            <td>[&#39;completed_units.json&#39;, &#39;eval_cache.jsonl&#39;, &#39;evaluation_results.json&#39;, &#39;experiment.json&#39;, &#39;run.json&#39;, &#39;trajectory.jsonl&#39;]</td>
+          </tr>
+          <tr>
+            <td>results_dir</td>
+            <td>results/experiments</td>
+          </tr>
+          <tr>
+            <td>dataset_version</td>
+            <td>None</td>
+          </tr>
+          <tr>
+            <td>prompt_version</td>
+            <td>None</td>
+          </tr>
+        </tbody>
+      </table>
+      <table>
+        <thead>
+          <tr>
+<th>metric_id</th><th>group</th>          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>task_resolution</td>
+            <td>correctness</td>
+          </tr>
+          <tr>
+            <td>engineering_usefulness</td>
+            <td>correctness</td>
+          </tr>
+          <tr>
+            <td>diff_minimality</td>
+            <td>correctness</td>
+          </tr>
+          <tr>
+            <td>tool_economy</td>
+            <td>trajectory</td>
+          </tr>
+          <tr>
+            <td>unnecessary_tool_calls</td>
+            <td>trajectory</td>
+          </tr>
+          <tr>
+            <td>planning_quality</td>
+            <td>trajectory</td>
+          </tr>
+          <tr>
+            <td>branch_safety</td>
+            <td>safety</td>
+          </tr>
+          <tr>
+            <td>blast_radius</td>
+            <td>safety</td>
+          </tr>
+          <tr>
+            <td>safe_failure</td>
+            <td>safety</td>
+          </tr>
+          <tr>
+            <td>grounding_ratio</td>
+            <td>grounding</td>
+          </tr>
+          <tr>
+            <td>hallucinated_api</td>
+            <td>grounding</td>
+          </tr>
+          <tr>
+            <td>test_honesty</td>
+            <td>grounding</td>
+          </tr>
+          <tr>
+            <td>recovery_score</td>
+            <td>reliability</td>
+          </tr>
+          <tr>
+            <td>calibration</td>
+            <td>reliability</td>
+          </tr>
+          <tr>
+            <td>cross_trial_consistency</td>
+            <td>reliability</td>
+          </tr>
+          <tr>
+            <td>reproducibility</td>
+            <td>efficiency</td>
+          </tr>
+          <tr>
+            <td>cost_normalized_capability</td>
+            <td>efficiency</td>
+          </tr>
+          <tr>
+            <td>local_vs_hosted_parity</td>
+            <td>efficiency</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </section>
+
+  <footer class="footer">Generated by GitHubBench-Delta reporting</footer>
+</body>
+</html>

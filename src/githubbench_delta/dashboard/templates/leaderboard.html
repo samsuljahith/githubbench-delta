@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard — GitHubBench-Delta{% endblock %}
+{% block content %}
+<h1>Leaderboard</h1>
+<p class="sub">Overall / group scores, confidence, cost, latency, success rate.</p>
+<div class="filters">
+  <select id="sort">
+    <option value="overall_score">overall_score</option>
+    <option value="confidence">confidence</option>
+    <option value="success_rate">success_rate</option>
+    <option value="cost_usd">cost_usd</option>
+    <option value="latency_ms">latency_ms</option>
+  </select>
+  <select id="order"><option value="desc">desc</option><option value="asc">asc</option></select>
+  <input id="agent" placeholder="Filter agent" />
+  <button id="reload">Apply</button>
+  <a href="/dashboard/api/export/csv">Export CSV</a>
+  <a href="/dashboard/api/export/markdown">Export MD</a>
+</div>
+<div class="panel">
+  <table>
+    <thead>
+      <tr>
+        <th>Agent</th><th>Overall</th><th>Confidence</th><th>Success</th>
+        <th>Cost</th><th>Latency</th><th>Correctness</th><th>N</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+async function load() {
+  const params = new URLSearchParams({
+    sort: document.getElementById('sort').value,
+    order: document.getElementById('order').value,
+    page_size: '100',
+  });
+  const agent = document.getElementById('agent').value;
+  if (agent) params.set('agent_id', agent);
+  const data = await (await fetch('/dashboard/api/leaderboard?' + params)).json();
+  document.getElementById('tbody').innerHTML = (data.items || []).map(r => `
+    <tr>
+      <td>${r.agent_id}</td>
+      <td>${r.overall_score.toFixed(3)}</td>
+      <td>${r.confidence.toFixed(3)}</td>
+      <td>${r.success_rate.toFixed(3)}</td>
+      <td>${r.cost_usd.toFixed(4)}</td>
+      <td>${r.latency_ms.toFixed(1)}</td>
+      <td>${(r.group_scores.correctness ?? 0).toFixed(3)}</td>
+      <td>${r.n_trials}</td>
+    </tr>`).join('') || '<tr><td colspan="8">No rows</td></tr>';
+}
+document.getElementById('reload').onclick = load;
+load();
+</script>
+{% endblock %}

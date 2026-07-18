@@ -1,0 +1,43 @@
+# Agent provider connection settings
+agents:
+  minicpm:
+    id: minicpm
+    display_name: MiniCPM (Local)
+    provider: ollama
+    model: minicpm
+    base_url: http://localhost:11434/v1
+    api_key_env: MINICPM_API_KEY
+    temperature: 0.2
+    max_tokens: 4096
+    rate_limit_rpm: 60
+    enabled: true
+    input_cost_per_1k: 0.0
+    output_cost_per_1k: 0.0
+
+  claude:
+    id: claude
+    display_name: Claude
+    provider: anthropic
+    model: claude-sonnet-4-20250514
+    base_url: https://api.anthropic.com
+    api_key_env: ANTHROPIC_API_KEY
+    temperature: 0.2
+    max_tokens: 8192
+    rate_limit_rpm: 50
+    enabled: true
+    input_cost_per_1k: 0.003
+    output_cost_per_1k: 0.015
+
+  codex:
+    id: codex
+    display_name: Codex
+    provider: openai
+    model: gpt-4.1
+    base_url: https://api.openai.com/v1
+    api_key_env: OPENAI_API_KEY
+    temperature: 0.2
+    max_tokens: 8192
+    rate_limit_rpm: 60
+    enabled: true
+    input_cost_per_1k: 0.002
+    output_cost_per_1k: 0.008

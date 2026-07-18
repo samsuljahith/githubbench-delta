@@ -1,0 +1,43 @@
+# GitHubBench-Delta default runtime configuration
+seed: 42
+trial_count: 3
+task_timeout_seconds: 600
+max_tool_calls: 50
+
+paths:
+  datasets: datasets
+  logs: logs
+  results: results
+  reports: reports
+
+storage:
+  sqlite_path: results/githubbench.db
+  duckdb_path: results/githubbench.duckdb
+
+sandbox:
+  protected_branches:
+    - main
+    - master
+  allow_network: false
+  allow_push: false
+
+retry:
+  max_attempts: 3
+  base_delay_s: 0.5
+  max_delay_s: 30
+  exponential_base: 2.0
+  jitter: true
+
+event_store:
+  backend: jsonl
+  jsonl_path: logs/events.jsonl
+  sqlite_path: results/events.db
+
+observability:
+  structured_logging: true
+
+pipeline:
+  max_concurrency: 1
+  resume: true
+  cache_evaluations: true
+  results_dir: results/experiments

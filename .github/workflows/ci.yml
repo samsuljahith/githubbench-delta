@@ -1,0 +1,184 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Ruff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Sync
+        run: uv sync --group dev
+      - name: Ruff check
+        run: uv run ruff check src tests
+      - name: Ruff format
+        run: uv run ruff format --check src tests
+
+  typecheck:
+    name: MyPy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --group dev
+      - run: uv run mypy src
+
+  test:
+    name: Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python-version }}
+      - run: uv sync --group dev
+      - name: Pytest + coverage
+        run: >
+          uv run pytest
+          --cov=githubbench_delta
+          --cov-report=term-missing
+          --cov-report=xml
+          -q
+      - name: Upload coverage
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+
+  package:
+    name: Packaging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --group dev
+      - name: Verify LICENSE
+        run: |
+          test -f LICENSE
+          grep -q 'Apache-2.0' pyproject.toml
+      - name: Build and install smoke
+        run: bash scripts/check_packaging.sh
+
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Required docs exist
+        run: |
+          set -euo pipefail
+          for f in \
+            docs/installation.md \
+            docs/quickstart.md \
+            docs/architecture.md \
+            docs/evaluation_methodology.md \
+            docs/cli.md \
+            docs/api.md \
+            docs/configuration.md \
+            docs/plugins.md \
+            docs/contributing.md \
+            docs/troubleshooting.md \
+            docs/faq.md \
+            docs/release.md \
+            docs/phases.md \
+            docs/pipeline.md \
+            docs/dashboard.md \
+            docs/reports.md \
+            README.md \
+            CHANGELOG.md \
+            LICENSE \
+            SECURITY.md \
+            CODE_OF_CONDUCT.md
+          do
+            test -f "$f" || { echo "Missing $f"; exit 1; }
+          done
+      - name: Relative markdown link check
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          root = Path(".")
+          files = [Path("README.md"), *sorted(Path("docs").rglob("*.md"))]
+          link_re = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
+          missing = []
+          for path in files:
+              text = path.read_text(encoding="utf-8")
+              for _label, target in link_re.findall(text):
+                  if target.startswith(("http://", "https://", "mailto:", "#")):
+                      continue
+                  href = target.split("#", 1)[0].split("?", 1)[0]
+                  if not href:
+                      continue
+                  dest = (path.parent / href).resolve()
+                  try:
+                      dest.relative_to(root.resolve())
+                  except ValueError:
+                      continue
+                  if not dest.exists():
+                      missing.append(f"{path}: broken link -> {target}")
+          if missing:
+              print("\n".join(missing))
+              sys.exit(1)
+          print(f"Checked {len(files)} markdown files OK")
+          PY
+
+  benchmark-smoke:
+    name: Benchmark regression smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --group dev
+      - name: Deterministic dry-run regression
+        run: uv run pytest tests/regression -m regression -q --tb=short
+
+  perf-smoke:
+    name: Performance smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --group dev
+      - name: Perf tests
+        run: uv run pytest tests/perf -m perf -q --tb=short
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --group dev
+      - name: pip-audit
+        run: uv run pip-audit --progress-spinner=off

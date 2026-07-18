@@ -1,0 +1,15 @@
+name: githubbench-delta-v1
+dataset_version: v1
+description: >
+  Production curated GitHub engineering corpus for GitHubBench-Delta (Phase 3.5).
+  Exactly 60 tasks across 12 categories, backed by six local multi-language
+  fixture repositories under datasets/fixtures/.
+author: GitHubBench-Delta Contributors
+license: Apache-2.0
+task_file: tasks.jsonl
+compatible_task_versions:
+  - "1.0.0"
+tags:
+  - curated
+  - v1
+  - phase-3.5

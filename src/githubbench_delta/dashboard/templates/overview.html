@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Overview — GitHubBench-Delta{% endblock %}
+{% block content %}
+<h1>Overview</h1>
+<p class="sub">Read-only exploration of completed experiment artifacts.</p>
+<div class="cards">
+  <div class="card"><div class="label">Experiments</div><div class="value" id="exp-count">—</div></div>
+  <div class="card"><div class="label">Evaluations</div><div class="value" id="eval-count">—</div></div>
+  <div class="card"><div class="label">Mean overall</div><div class="value" id="mean-score">—</div></div>
+  <div class="card"><div class="label">Agents</div><div class="value" id="agents">—</div></div>
+</div>
+<div class="panel">
+  <h2>Latest experiments</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Name</th><th>Status</th><th>Score</th><th>Units</th></tr></thead>
+    <tbody id="latest-body"></tbody>
+  </table>
+</div>
+<div class="panel"><div id="chart-bars" class="chart"></div></div>
+{% endblock %}
+{% block scripts %}
+<script>
+async function load() {
+  const ov = await (await fetch('/dashboard/api/overview')).json();
+  document.getElementById('exp-count').textContent = ov.experiment_count;
+  document.getElementById('eval-count').textContent = ov.evaluation_count;
+  document.getElementById('mean-score').textContent =
+    ov.mean_overall_score == null ? '—' : ov.mean_overall_score.toFixed(3);
+  document.getElementById('agents').textContent = (ov.agent_ids || []).join(', ') || '—';
+  const body = document.getElementById('latest-body');
+  body.innerHTML = (ov.latest_experiments || []).map(e => `
+    <tr>
+      <td><a href="/dashboard/experiments/${e.experiment_id}">${e.experiment_id}</a></td>
+      <td>${e.name || ''}</td>
+      <td><span class="badge">${e.status}</span></td>
+      <td>${e.mean_overall_score == null ? '—' : e.mean_overall_score.toFixed(3)}</td>
+      <td>${e.units_done}/${e.units_total}</td>
+    </tr>`).join('');
+  const fig = await (await fetch('/dashboard/api/charts/bars')).json();
+  Plotly.newPlot('chart-bars', fig.data, fig.layout, {responsive: true, displayModeBar: false});
+}
+load();
+</script>
+{% endblock %}
