@@ -36,6 +36,7 @@ flowchart LR
 | [benchmark.md](benchmark.md) | Live showcase numbers (`exp_6afa2ce533ba4e0a` only) |
 | [providers.md](providers.md) | MiniCPM, Claude, Codex setup |
 | [pipeline.md](pipeline.md) | Experiment orchestration |
+| [observatory.md](observatory.md) | Half-life / saturation trends over experiment history |
 | [configuration.md](configuration.md) | YAML + env configuration |
 
 ---
@@ -48,6 +49,7 @@ flowchart LR
 | [api.md](api.md) | FastAPI endpoints |
 | [dashboard.md](dashboard.md) | Interactive explorer |
 | [reports.md](reports.md) | MD / HTML / PDF / JSON / CSV |
+| [observatory.md](observatory.md) | Longitudinal half-life CLI + exports |
 | [plugins.md](plugins.md) | Extension points |
 | [troubleshooting.md](troubleshooting.md) | Common failures |
 | [faq.md](faq.md) | Short answers |
@@ -62,6 +64,7 @@ flowchart LR
 | [assets/screenshots/](assets/screenshots/) | Dashboard PNGs (`overview`, `leaderboard`, `agents`, `experiment_detail`) |
 | [assets/example-report/](assets/example-report/) | Example HTML / MD reports |
 | [assets/example-benchmark/](assets/example-benchmark/) | Example leaderboard CSV |
+| [assets/observatory/](assets/observatory/) | Demo half-life history + sample report (partly synthetic) |
 
 ### Screenshots
 

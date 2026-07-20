@@ -316,6 +316,7 @@ This **README** is the public entry point. The docs hub is **[docs/index.md](doc
 | [Installation](docs/installation.md) · [Quick Start](docs/quickstart.md) | Onboarding |
 | [CLI](docs/cli.md) · [API](docs/api.md) · [Pipeline](docs/pipeline.md) | Operations |
 | [Dashboard](docs/dashboard.md) · [Reports](docs/reports.md) | Explore and publish |
+| [Observatory](docs/observatory.md) | Benchmark half-life / saturation trends |
 | [Showcase (dry-run UX)](docs/showcase.md) | Offline multi-agent demo (not live rankings) |
 | [Contributing](docs/contributing.md) · [FAQ](docs/faq.md) · [Troubleshooting](docs/troubleshooting.md) | Community |
 

@@ -1,0 +1,108 @@
+{
+  "half_life_days": 81.75815686775731,
+  "confidence": 0.9921303520719382,
+  "decaying": true,
+  "usefulness_trend": "losing_differentiation",
+  "lambda_per_day": 0.008478018672572344,
+  "d0": 0.38641649325668015,
+  "r_squared": 0.9825118934931958,
+  "formula": "D(t) = D0 * exp(-lambda * t)",
+  "sample_timestamps": 6,
+  "sample_models": 3,
+  "notes": [],
+  "metadata": {
+    "span_days": 150.0,
+    "mean_saturation": 0.6100833333333333,
+    "final_differentiation": 0.09999999999999998,
+    "lambda_per_day": 0.008478018672572344
+  },
+  "decay_curve_points": [
+    {
+      "t_days": 0.0,
+      "differentiation": 0.36000000000000004,
+      "fitted": 0.38641649325668015,
+      "saturation": 0.6,
+      "timestamp": "2026-03-20T05:17:29Z"
+    },
+    {
+      "t_days": 30.0,
+      "differentiation": 0.3,
+      "fitted": 0.2996380438312922,
+      "saturation": 0.61,
+      "timestamp": "2026-04-19T05:17:29Z"
+    },
+    {
+      "t_days": 60.0,
+      "differentiation": 0.25,
+      "fitted": 0.2323476323548239,
+      "saturation": 0.615,
+      "timestamp": "2026-05-19T05:17:29Z"
+    },
+    {
+      "t_days": 90.0,
+      "differentiation": 0.18999999999999995,
+      "fitted": 0.18016878487996096,
+      "saturation": 0.615,
+      "timestamp": "2026-06-18T05:17:29Z"
+    },
+    {
+      "t_days": 120.0,
+      "differentiation": 0.14300000000000002,
+      "fitted": 0.13970786237903196,
+      "saturation": 0.6105,
+      "timestamp": "2026-07-18T05:17:29Z"
+    },
+    {
+      "t_days": 150.0,
+      "differentiation": 0.09999999999999998,
+      "fitted": 0.10833334322326017,
+      "saturation": 0.6100000000000001,
+      "timestamp": "2026-08-17T05:17:29Z"
+    }
+  ],
+  "saturation_series": [
+    {
+      "t_days": 0.0,
+      "differentiation": 0.36000000000000004,
+      "fitted": 0.38641649325668015,
+      "saturation": 0.6,
+      "timestamp": "2026-03-20T05:17:29Z"
+    },
+    {
+      "t_days": 30.0,
+      "differentiation": 0.3,
+      "fitted": 0.2996380438312922,
+      "saturation": 0.61,
+      "timestamp": "2026-04-19T05:17:29Z"
+    },
+    {
+      "t_days": 60.0,
+      "differentiation": 0.25,
+      "fitted": 0.2323476323548239,
+      "saturation": 0.615,
+      "timestamp": "2026-05-19T05:17:29Z"
+    },
+    {
+      "t_days": 90.0,
+      "differentiation": 0.18999999999999995,
+      "fitted": 0.18016878487996096,
+      "saturation": 0.615,
+      "timestamp": "2026-06-18T05:17:29Z"
+    },
+    {
+      "t_days": 120.0,
+      "differentiation": 0.14300000000000002,
+      "fitted": 0.13970786237903196,
+      "saturation": 0.6105,
+      "timestamp": "2026-07-18T05:17:29Z"
+    },
+    {
+      "t_days": 150.0,
+      "differentiation": 0.09999999999999998,
+      "fitted": 0.10833334322326017,
+      "saturation": 0.6100000000000001,
+      "timestamp": "2026-08-17T05:17:29Z"
+    }
+  ],
+  "regressions": []
+}

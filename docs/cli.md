@@ -43,7 +43,7 @@ Show aggregated runtime configuration.
 | `experiment run` | Execute evaluation (`--dry-run` supported) |
 | `experiment status ID` | Show experiment/run status |
 
-Common `run` flags: `--dataset`, `--agent`, `--task`, `--trials`, `--seed`, `--concurrency`, `--resume/--no-resume`, `--cache/--no-cache`, `--dry-run`, `--name`.
+Common `run` flags: `--dataset`, `--agent`, `--task`, `--trials`, `--seed`, `--concurrency`, `--resume/--no-resume`, `--cache/--no-cache`, `--dry-run`, `--name`, `--record-observatory`.
 
 ### `report`
 
@@ -52,5 +52,17 @@ Common `run` flags: `--dataset`, `--agent`, `--task`, `--trials`, `--seed`, `--c
 | `report generate` | Build publication report |
 | `report compare` | Baseline vs candidate regression report |
 | `report export` | Flat CSV/JSON/… dump |
+
+### `observatory`
+
+Half-Life Observatory — longitudinal differentiation / saturation analysis. History defaults to `results/observatory/`. See [Observatory](observatory.md).
+
+| Command | Description |
+|---------|-------------|
+| `observatory ingest` | Append snapshots from completed experiments |
+| `observatory analyze` | Fit half-life + write JSON / Markdown / charts |
+| `observatory trend` | Print score / provider / model tables (`--provider`, `--model`) |
+| `observatory report` | Full narrative report (alias of `analyze`) |
+| `observatory export` | Export selected formats (`-f json\|markdown\|html`) |
 
 See also [Reports](reports.md) and [Pipeline](pipeline.md).

@@ -1,0 +1,429 @@
+{
+  "score_vs_time": [
+    {
+      "timestamp": "2026-03-20T05:17:29Z",
+      "value": 0.78,
+      "label": "codex",
+      "metadata": {
+        "experiment_id": "exp_synthetic_00",
+        "provider": "openai",
+        "model": "gpt-4.1"
+      }
+    },
+    {
+      "timestamp": "2026-03-20T05:17:29Z",
+      "value": 0.42,
+      "label": "minicpm",
+      "metadata": {
+        "experiment_id": "exp_synthetic_00",
+        "provider": "local",
+        "model": "minicpm"
+      }
+    },
+    {
+      "timestamp": "2026-04-19T05:17:29Z",
+      "value": 0.76,
+      "label": "codex",
+      "metadata": {
+        "experiment_id": "exp_synthetic_01",
+        "provider": "openai",
+        "model": "gpt-4.1"
+      }
+    },
+    {
+      "timestamp": "2026-04-19T05:17:29Z",
+      "value": 0.46,
+      "label": "minicpm",
+      "metadata": {
+        "experiment_id": "exp_synthetic_01",
+        "provider": "local",
+        "model": "minicpm"
+      }
+    },
+    {
+      "timestamp": "2026-05-19T05:17:29Z",
+      "value": 0.74,
+      "label": "codex",
+      "metadata": {
+        "experiment_id": "exp_synthetic_02",
+        "provider": "openai",
+        "model": "gpt-4.1"
+      }
+    },
+    {
+      "timestamp": "2026-05-19T05:17:29Z",
+      "value": 0.49,
+      "label": "minicpm",
+      "metadata": {
+        "experiment_id": "exp_synthetic_02",
+        "provider": "local",
+        "model": "minicpm"
+      }
+    },
+    {
+      "timestamp": "2026-06-18T05:17:29Z",
+      "value": 0.71,
+      "label": "codex",
+      "metadata": {
+        "experiment_id": "exp_synthetic_03",
+        "provider": "openai",
+        "model": "gpt-4.1"
+      }
+    },
+    {
+      "timestamp": "2026-06-18T05:17:29Z",
+      "value": 0.52,
+      "label": "minicpm",
+      "metadata": {
+        "experiment_id": "exp_synthetic_03",
+        "provider": "local",
+        "model": "minicpm"
+      }
+    },
+    {
+      "timestamp": "2026-07-18T05:17:29Z",
+      "value": 0.682,
+      "label": "codex",
+      "metadata": {
+        "experiment_id": "exp_6afa2ce533ba4e0a",
+        "provider": "openai",
+        "model": "gpt-4.1"
+      }
+    },
+    {
+      "timestamp": "2026-07-18T05:17:29Z",
+      "value": 0.539,
+      "label": "minicpm",
+      "metadata": {
+        "experiment_id": "exp_6afa2ce533ba4e0a",
+        "provider": "local",
+        "model": "minicpm"
+      }
+    },
+    {
+      "timestamp": "2026-08-17T05:17:29Z",
+      "value": 0.66,
+      "label": "codex",
+      "metadata": {
+        "experiment_id": "exp_synthetic_05",
+        "provider": "openai",
+        "model": "gpt-4.1"
+      }
+    },
+    {
+      "timestamp": "2026-08-17T05:17:29Z",
+      "value": 0.56,
+      "label": "minicpm",
+      "metadata": {
+        "experiment_id": "exp_synthetic_05",
+        "provider": "local",
+        "model": "minicpm"
+      }
+    }
+  ],
+  "provider_trends": {
+    "openai": [
+      {
+        "timestamp": "2026-03-20T05:17:29Z",
+        "value": 0.78,
+        "label": "codex",
+        "metadata": {
+          "model": "gpt-4.1",
+          "experiment_id": "exp_synthetic_00"
+        }
+      },
+      {
+        "timestamp": "2026-04-19T05:17:29Z",
+        "value": 0.76,
+        "label": "codex",
+        "metadata": {
+          "model": "gpt-4.1",
+          "experiment_id": "exp_synthetic_01"
+        }
+      },
+      {
+        "timestamp": "2026-05-19T05:17:29Z",
+        "value": 0.74,
+        "label": "codex",
+        "metadata": {
+          "model": "gpt-4.1",
+          "experiment_id": "exp_synthetic_02"
+        }
+      },
+      {
+        "timestamp": "2026-06-18T05:17:29Z",
+        "value": 0.71,
+        "label": "codex",
+        "metadata": {
+          "model": "gpt-4.1",
+          "experiment_id": "exp_synthetic_03"
+        }
+      },
+      {
+        "timestamp": "2026-07-18T05:17:29Z",
+        "value": 0.682,
+        "label": "codex",
+        "metadata": {
+          "model": "gpt-4.1",
+          "experiment_id": "exp_6afa2ce533ba4e0a"
+        }
+      },
+      {
+        "timestamp": "2026-08-17T05:17:29Z",
+        "value": 0.66,
+        "label": "codex",
+        "metadata": {
+          "model": "gpt-4.1",
+          "experiment_id": "exp_synthetic_05"
+        }
+      }
+    ],
+    "local": [
+      {
+        "timestamp": "2026-03-20T05:17:29Z",
+        "value": 0.42,
+        "label": "minicpm",
+        "metadata": {
+          "model": "minicpm",
+          "experiment_id": "exp_synthetic_00"
+        }
+      },
+      {
+        "timestamp": "2026-04-19T05:17:29Z",
+        "value": 0.46,
+        "label": "minicpm",
+        "metadata": {
+          "model": "minicpm",
+          "experiment_id": "exp_synthetic_01"
+        }
+      },
+      {
+        "timestamp": "2026-05-19T05:17:29Z",
+        "value": 0.49,
+        "label": "minicpm",
+        "metadata": {
+          "model": "minicpm",
+          "experiment_id": "exp_synthetic_02"
+        }
+      },
+      {
+        "timestamp": "2026-06-18T05:17:29Z",
+        "value": 0.52,
+        "label": "minicpm",
+        "metadata": {
+          "model": "minicpm",
+          "experiment_id": "exp_synthetic_03"
+        }
+      },
+      {
+        "timestamp": "2026-07-18T05:17:29Z",
+        "value": 0.539,
+        "label": "minicpm",
+        "metadata": {
+          "model": "minicpm",
+          "experiment_id": "exp_6afa2ce533ba4e0a"
+        }
+      },
+      {
+        "timestamp": "2026-08-17T05:17:29Z",
+        "value": 0.56,
+        "label": "minicpm",
+        "metadata": {
+          "model": "minicpm",
+          "experiment_id": "exp_synthetic_05"
+        }
+      }
+    ]
+  },
+  "model_progression": {
+    "openai/gpt-4.1": [
+      {
+        "timestamp": "2026-03-20T05:17:29Z",
+        "value": 0.78,
+        "label": "codex",
+        "metadata": {
+          "experiment_id": "exp_synthetic_00"
+        }
+      },
+      {
+        "timestamp": "2026-04-19T05:17:29Z",
+        "value": 0.76,
+        "label": "codex",
+        "metadata": {
+          "experiment_id": "exp_synthetic_01"
+        }
+      },
+      {
+        "timestamp": "2026-05-19T05:17:29Z",
+        "value": 0.74,
+        "label": "codex",
+        "metadata": {
+          "experiment_id": "exp_synthetic_02"
+        }
+      },
+      {
+        "timestamp": "2026-06-18T05:17:29Z",
+        "value": 0.71,
+        "label": "codex",
+        "metadata": {
+          "experiment_id": "exp_synthetic_03"
+        }
+      },
+      {
+        "timestamp": "2026-07-18T05:17:29Z",
+        "value": 0.682,
+        "label": "codex",
+        "metadata": {
+          "experiment_id": "exp_6afa2ce533ba4e0a"
+        }
+      },
+      {
+        "timestamp": "2026-08-17T05:17:29Z",
+        "value": 0.66,
+        "label": "codex",
+        "metadata": {
+          "experiment_id": "exp_synthetic_05"
+        }
+      }
+    ],
+    "local/minicpm": [
+      {
+        "timestamp": "2026-03-20T05:17:29Z",
+        "value": 0.42,
+        "label": "minicpm",
+        "metadata": {
+          "experiment_id": "exp_synthetic_00"
+        }
+      },
+      {
+        "timestamp": "2026-04-19T05:17:29Z",
+        "value": 0.46,
+        "label": "minicpm",
+        "metadata": {
+          "experiment_id": "exp_synthetic_01"
+        }
+      },
+      {
+        "timestamp": "2026-05-19T05:17:29Z",
+        "value": 0.49,
+        "label": "minicpm",
+        "metadata": {
+          "experiment_id": "exp_synthetic_02"
+        }
+      },
+      {
+        "timestamp": "2026-06-18T05:17:29Z",
+        "value": 0.52,
+        "label": "minicpm",
+        "metadata": {
+          "experiment_id": "exp_synthetic_03"
+        }
+      },
+      {
+        "timestamp": "2026-07-18T05:17:29Z",
+        "value": 0.539,
+        "label": "minicpm",
+        "metadata": {
+          "experiment_id": "exp_6afa2ce533ba4e0a"
+        }
+      },
+      {
+        "timestamp": "2026-08-17T05:17:29Z",
+        "value": 0.56,
+        "label": "minicpm",
+        "metadata": {
+          "experiment_id": "exp_synthetic_05"
+        }
+      }
+    ]
+  },
+  "saturation_vs_time": [
+    {
+      "timestamp": "2026-03-20T05:17:29Z",
+      "value": 0.6,
+      "label": "saturation",
+      "metadata": {}
+    },
+    {
+      "timestamp": "2026-04-19T05:17:29Z",
+      "value": 0.61,
+      "label": "saturation",
+      "metadata": {}
+    },
+    {
+      "timestamp": "2026-05-19T05:17:29Z",
+      "value": 0.615,
+      "label": "saturation",
+      "metadata": {}
+    },
+    {
+      "timestamp": "2026-06-18T05:17:29Z",
+      "value": 0.615,
+      "label": "saturation",
+      "metadata": {}
+    },
+    {
+      "timestamp": "2026-07-18T05:17:29Z",
+      "value": 0.6105,
+      "label": "saturation",
+      "metadata": {}
+    },
+    {
+      "timestamp": "2026-08-17T05:17:29Z",
+      "value": 0.6100000000000001,
+      "label": "saturation",
+      "metadata": {}
+    }
+  ],
+  "differentiation_vs_time": [
+    {
+      "timestamp": "2026-03-20T05:17:29Z",
+      "value": 0.36000000000000004,
+      "label": "differentiation",
+      "metadata": {}
+    },
+    {
+      "timestamp": "2026-04-19T05:17:29Z",
+      "value": 0.3,
+      "label": "differentiation",
+      "metadata": {}
+    },
+    {
+      "timestamp": "2026-05-19T05:17:29Z",
+      "value": 0.25,
+      "label": "differentiation",
+      "metadata": {}
+    },
+    {
+      "timestamp": "2026-06-18T05:17:29Z",
+      "value": 0.18999999999999995,
+      "label": "differentiation",
+      "metadata": {}
+    },
+    {
+      "timestamp": "2026-07-18T05:17:29Z",
+      "value": 0.14300000000000002,
+      "label": "differentiation",
+      "metadata": {}
+    },
+    {
+      "timestamp": "2026-08-17T05:17:29Z",
+      "value": 0.09999999999999998,
+      "label": "differentiation",
+      "metadata": {}
+    }
+  ],
+  "metadata": {
+    "n_snapshots": 12,
+    "n_cohorts": 6,
+    "providers": [
+      "local",
+      "openai"
+    ],
+    "models": [
+      "local/minicpm",
+      "openai/gpt-4.1"
+    ]
+  },
+  "regressions": []
+}

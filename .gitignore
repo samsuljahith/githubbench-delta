@@ -30,6 +30,9 @@ logs/*
 !logs/.gitkeep
 results/*
 !results/.gitkeep
+!results/observatory/
+results/observatory/*
+!results/observatory/.gitkeep
 reports/*
 !reports/.gitkeep
 *.db

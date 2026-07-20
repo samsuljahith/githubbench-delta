@@ -1,0 +1,25 @@
+{
+  "count": 12,
+  "experiments": [
+    "exp_6afa2ce533ba4e0a",
+    "exp_synthetic_00",
+    "exp_synthetic_01",
+    "exp_synthetic_02",
+    "exp_synthetic_03",
+    "exp_synthetic_05"
+  ],
+  "agents": [
+    "codex",
+    "minicpm"
+  ],
+  "providers": [
+    "local",
+    "openai"
+  ],
+  "models": [
+    "gpt-4.1",
+    "minicpm"
+  ],
+  "t_min": "2026-03-20T05:17:29+00:00",
+  "t_max": "2026-08-17T05:17:29+00:00"
+}

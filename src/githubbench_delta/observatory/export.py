@@ -1,0 +1,217 @@
+"""Export observatory analysis artifacts (JSON, Markdown, charts)."""
+
+from __future__ import annotations
+
+import json
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+from githubbench_delta.observatory.charts import write_all_charts
+from githubbench_delta.observatory.half_life import HalfLifeEstimator
+from githubbench_delta.observatory.history import DEFAULT_HISTORY_DIR, BenchmarkHistory
+from githubbench_delta.observatory.models import (
+    BenchmarkSnapshot,
+    HalfLifeEstimate,
+    RegressionEvent,
+    TrendReport,
+)
+from githubbench_delta.observatory.regression import RegressionDetector
+from githubbench_delta.observatory.trends import TrendAnalyzer
+
+
+def default_report_dir(base: Path | None = None) -> Path:
+    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    root = Path(base or "results/observatory/reports")
+    return root / stamp
+
+
+class ObservatoryExporter:
+    """Write decay / trends / half-life narrative and chart assets."""
+
+    def __init__(
+        self,
+        *,
+        history_dir: Path | str | None = None,
+        estimator: HalfLifeEstimator | None = None,
+        analyzer: TrendAnalyzer | None = None,
+        detector: RegressionDetector | None = None,
+    ) -> None:
+        self.history = BenchmarkHistory(history_dir=history_dir or DEFAULT_HISTORY_DIR)
+        self.estimator = estimator or HalfLifeEstimator()
+        self.analyzer = analyzer or TrendAnalyzer()
+        self.detector = detector or RegressionDetector()
+
+    def analyze(
+        self,
+        snapshots: list[BenchmarkSnapshot] | None = None,
+    ) -> tuple[HalfLifeEstimate, TrendReport, list[RegressionEvent]]:
+        snaps = snapshots if snapshots is not None else self.history.load()
+        estimate = self.estimator.estimate(snaps)
+        trends = self.analyzer.analyze(snaps)
+        events = self.detector.detect(snaps)
+        return estimate, trends, events
+
+    def export(
+        self,
+        output_dir: Path | str | None = None,
+        *,
+        snapshots: list[BenchmarkSnapshot] | None = None,
+        formats: set[str] | None = None,
+        write_png: bool = True,
+    ) -> Path:
+        """Write report bundle. Returns the output directory."""
+
+        out = Path(output_dir) if output_dir else default_report_dir()
+        out.mkdir(parents=True, exist_ok=True)
+        fmts = formats or {"json", "markdown", "html"}
+        estimate, trends, events = self.analyze(snapshots)
+
+        if "json" in fmts:
+            self._write_decay_json(out / "benchmark_decay.json", estimate, events)
+            self._write_trends_json(out / "benchmark_trends.json", trends, events)
+
+        if "markdown" in fmts:
+            (out / "benchmark_half_life.md").write_text(
+                self._render_markdown(estimate, trends, events),
+                encoding="utf-8",
+            )
+
+        if "html" in fmts or "json" in fmts:
+            charts_dir = out / "charts"
+            write_all_charts(trends, estimate, charts_dir, write_png=write_png)
+
+        return out
+
+    @staticmethod
+    def _write_decay_json(
+        path: Path,
+        estimate: HalfLifeEstimate,
+        events: list[RegressionEvent],
+    ) -> None:
+        payload: dict[str, Any] = {
+            "half_life_days": estimate.half_life_days,
+            "confidence": estimate.confidence,
+            "decaying": estimate.decaying,
+            "usefulness_trend": estimate.usefulness_trend,
+            "lambda_per_day": estimate.decay_curve.lambda_per_day,
+            "d0": estimate.decay_curve.d0,
+            "r_squared": estimate.decay_curve.r_squared,
+            "formula": estimate.decay_curve.formula,
+            "sample_timestamps": estimate.sample_timestamps,
+            "sample_models": estimate.sample_models,
+            "notes": estimate.notes,
+            "metadata": estimate.metadata,
+            "decay_curve_points": [p.model_dump(mode="json") for p in estimate.decay_curve.points],
+            "saturation_series": [p.model_dump(mode="json") for p in estimate.saturation_series],
+            "regressions": [e.model_dump(mode="json") for e in events],
+        }
+        path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+    @staticmethod
+    def _write_trends_json(
+        path: Path,
+        trends: TrendReport,
+        events: list[RegressionEvent],
+    ) -> None:
+        payload = {
+            **trends.model_dump(mode="json"),
+            "regressions": [e.model_dump(mode="json") for e in events],
+        }
+        path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+    def _render_markdown(
+        self,
+        estimate: HalfLifeEstimate,
+        trends: TrendReport,
+        events: list[RegressionEvent],
+    ) -> str:
+        hl_txt = HalfLifeEstimator.format_half_life(estimate.half_life_days)
+        lines = [
+            "# Benchmark Half-Life Report",
+            "",
+            "Generated by GitHubBench-Delta Half-Life Observatory.",
+            "",
+            "## Summary",
+            "",
+            "| Field | Value |",
+            "|-------|------:|",
+            f"| Half-life | {hl_txt} |",
+            f"| Confidence | {estimate.confidence:.3f} |",
+            f"| Decaying | {estimate.decaying} |",
+            f"| λ (per day) | {estimate.decay_curve.lambda_per_day:.6f} |",
+            f"| D₀ | {estimate.decay_curve.d0:.6f} |",
+            f"| Fit R² | {estimate.decay_curve.r_squared:.3f} |",
+            f"| Usefulness trend | {estimate.usefulness_trend} |",
+            f"| Cohorts (timestamps) | {estimate.sample_timestamps} |",
+            f"| Models / agents | {estimate.sample_models} |",
+            "",
+            "## Assumptions",
+            "",
+            "- Differentiation \\(D(t)\\) = population stddev of contemporaneous model scores "
+            "(max−min gap when exactly two models).",
+            "- Saturation \\(S(t)\\) = mean overall score (ceiling 1.0).",
+            "- Fit \\(D(t) \\approx D_0 e^{-\\lambda t}\\) via log-linear least squares (numpy).",
+            "- Half-life \\(t_{1/2} = \\ln 2 / \\lambda\\) when \\(\\lambda > 0\\).",
+            "- Minimum viable history: ≥3 distinct timestamps with ≥2 models "
+            "(otherwise confidence is penalized).",
+            "",
+        ]
+        if estimate.notes:
+            lines.extend(["## Notes", ""])
+            for note in estimate.notes:
+                lines.append(f"- {note}")
+            lines.append("")
+
+        lines.extend(
+            [
+                "## Differentiation curve",
+                "",
+                "| t (days) | D(t) | Fitted | S(t) |",
+                "|---------:|-----:|-------:|-----:|",
+            ]
+        )
+        for p in estimate.decay_curve.points:
+            sat = f"{p.saturation:.4f}" if p.saturation is not None else "—"
+            fitted = f"{p.fitted:.4f}" if p.fitted is not None else "—"
+            lines.append(f"| {p.t_days:.2f} | {p.differentiation:.4f} | {fitted} | {sat} |")
+        lines.append("")
+
+        lines.extend(
+            [
+                "## Provider / model coverage",
+                "",
+                f"- Providers: {', '.join(trends.metadata.get('providers', []) or []) or 'none'}",
+                f"- Models: {', '.join(trends.metadata.get('models', []) or []) or 'none'}",
+                f"- Snapshots: {trends.metadata.get('n_snapshots', 0)}",
+                "",
+            ]
+        )
+
+        if events:
+            lines.extend(["## Detected regressions", ""])
+            for ev in events:
+                lines.append(
+                    f"- **{ev.kind}** @ `{ev.timestamp.isoformat()}` — {ev.message} "
+                    f"(severity={ev.severity:.2f})"
+                )
+            lines.append("")
+        else:
+            lines.extend(["## Detected regressions", "", "None.", ""])
+
+        lines.extend(
+            [
+                "## Charts",
+                "",
+                "See `charts/` in this report directory for Plotly HTML "
+                "(and PNG when Kaleido is available):",
+                "",
+                "- `score_vs_time`",
+                "- `provider_trend`",
+                "- `model_progression`",
+                "- `saturation`",
+                "- `differentiation_curve`",
+                "",
+            ]
+        )
+        return "\n".join(lines) + "\n"

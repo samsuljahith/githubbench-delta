@@ -20,6 +20,7 @@ from githubbench_delta.datasets.manifest import generate_manifest, write_manifes
 from githubbench_delta.datasets.validators import DatasetValidator
 from githubbench_delta.metrics.registry import catalog_entries, list_metric_ids
 from githubbench_delta.observability.logging import configure_cli_logging
+from githubbench_delta.observatory.cli import observatory_app
 from githubbench_delta.pipeline.experiment import ExperimentRunner
 from githubbench_delta.pipeline.experiment_manager import ExperimentManager
 from githubbench_delta.pipeline.models import ExperimentSpec
@@ -40,6 +41,7 @@ experiment_app = typer.Typer(help="Create and run evaluation experiments.")
 app.add_typer(experiment_app, name="experiment")
 report_app = typer.Typer(help="Generate publication reports from experiment artifacts.")
 app.add_typer(report_app, name="report")
+app.add_typer(observatory_app, name="observatory")
 
 console = Console(width=120, soft_wrap=True)
 logger = logging.getLogger("githubbench_delta.cli")
@@ -283,6 +285,11 @@ def experiment_run(
     ),
     name: str = typer.Option("", "--name", help="Optional human-readable experiment name"),
     config_dir: Path | None = typer.Option(None, "--config-dir", help="Override configs directory"),
+    record_observatory: bool = typer.Option(
+        False,
+        "--record-observatory/--no-record-observatory",
+        help="After a successful run, append a Half-Life Observatory snapshot (default: off)",
+    ),
 ) -> None:
     """Run an end-to-end evaluation experiment."""
 
@@ -310,6 +317,13 @@ def experiment_run(
         f"[green]{manifest.status}[/green] experiment={manifest.experiment_id} "
         f"tasks={len(manifest.task_ids)} agents={manifest.agent_ids}"
     )
+    if record_observatory and str(manifest.status).lower() == "completed":
+        from githubbench_delta.observatory.ingest import ingest_experiments
+
+        written, skipped = ingest_experiments(experiment_ids=[manifest.experiment_id])
+        console.print(
+            f"[cyan]observatory[/cyan] recorded snapshots written={written} skipped={skipped}"
+        )
 
 
 @experiment_app.command("status")
