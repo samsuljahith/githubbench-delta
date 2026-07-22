@@ -88,7 +88,7 @@ function normalizeTurnRole(role: string | undefined): Turn["role"] {
   return "assistant";
 }
 
-/** Prefer fixture conversation turns; else templated chrome transcript. */
+/** Prefer structured turns; else conversation_text; else templated chrome. */
 export function getConversation(patient: SyntheticPatient): Turn[] {
   if (patient.conversation && patient.conversation.length > 0) {
     return patient.conversation.map((t, i) => ({
@@ -96,6 +96,36 @@ export function getConversation(patient: SyntheticPatient): Turn[] {
       text: t.text,
       t: t.t || `00:${String(i * 10).padStart(2, "0")}`,
     }));
+  }
+  if (patient.conversationText?.trim()) {
+    const chunks = patient.conversationText
+      .split(/\n+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (chunks.length >= 2) {
+      return chunks.map((text, i) => {
+        const lower = text.toLowerCase();
+        const isCoordinator =
+          lower.startsWith("care coordinator") ||
+          lower.startsWith("coordinator") ||
+          i % 2 === 0;
+        // Strip "Role:" prefixes when present
+        const cleaned = text.replace(/^(care\s+coordinator|caregiver|assistant|patient)\s*(\([^)]*\))?\s*:\s*/i, "");
+        return {
+          role: (isCoordinator ? "assistant" : "patient") as Turn["role"],
+          text: cleaned || text,
+          t: `00:${String(i * 12).padStart(2, "0")}`,
+        };
+      });
+    }
+    return [
+      {
+        role: "assistant",
+        text: "Thanks for calling — please share how things have been.",
+        t: "00:00",
+      },
+      { role: "patient", text: patient.conversationText.trim(), t: "00:15" },
+    ];
   }
   const first = patient.name.split(" ")[0] || patient.name;
   const replace = (text: string) =>

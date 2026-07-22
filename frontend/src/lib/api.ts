@@ -183,6 +183,9 @@ export type CasePatientPayload = {
   medications?: string[];
   living_situation?: string;
   risk_profile?: string;
+  scenario_type?: string;
+  conversation_text?: string | null;
+  conversation?: { role?: string; text?: string; t?: string }[];
 };
 
 export type LoopEngineering = {
@@ -270,7 +273,7 @@ export type GeneratePatientsData = {
   provenance?: string;
 };
 
-export function postGeneratePatients(count = 3) {
+export function postGeneratePatients(count = 5) {
   return request<FacadeEnvelope<GeneratePatientsData>>("/cases/generate-patients", {
     method: "POST",
     timeoutMs: 90_000,

@@ -29,7 +29,7 @@ def _client() -> TestClient:
     return TestClient(create_app())
 
 
-def test_generate_patients_missing_key(monkeypatch, tmp_path: Path):
+def test_generate_patients_missing_key_falls_back_to_fixtures(monkeypatch, tmp_path: Path):
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
     from githubbench_delta.core.config import load_config
@@ -40,20 +40,31 @@ def test_generate_patients_missing_key(monkeypatch, tmp_path: Path):
         patch("githubbench_delta.api.synthetic.load_config", return_value=cfg),
         patch("githubbench_delta.api.synthetic._gemini_api_key", return_value=""),
     ):
-        body = _client().post("/cases/generate-patients", json={"count": 2}).json()
-    assert body["ok"] is False
-    assert body["status"] == "insufficient_data"
-    assert "GEMINI_API_KEY" in (body["detail"] or "")
+        body = _client().post("/cases/generate-patients", json={"count": 5}).json()
+    assert body["ok"] is True
+    assert body["data"]["source"] == "fixture_fallback"
+    assert len(body["data"]["patients"]) == 5
+    types = {p.get("scenario_type") for p in body["data"]["patients"]}
+    assert types == {
+        "complete",
+        "missing_finding",
+        "hallucination_risk",
+        "contraindication",
+        "incomplete",
+    }
+    assert all(p.get("conversation_text") for p in body["data"]["patients"])
 
 
 def test_generate_patients_mocked(monkeypatch, tmp_path: Path):
     monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    from githubbench_delta.api.synthetic import SCENARIO_TYPES
     from githubbench_delta.core.config import load_config
 
     cfg = load_config()
     cfg.runtime.pipeline.results_dir = tmp_path / "experiments"
 
     def fake_gemini(*, count: int, client=None):
+        scenarios = list(SCENARIO_TYPES)[:count]
         return [
             GeneratedPatient(
                 id=f"SYN-G-{i}",
@@ -65,19 +76,28 @@ def test_generate_patients_mocked(monkeypatch, tmp_path: Path):
                 medications=["Amlodipine"],
                 living_situation="Lives alone",
                 risk_profile="Moderate",
+                scenario_type=scenarios[i],
+                conversation_text=(
+                    "Care coordinator: How has mum been? "
+                    "Caregiver: She is tired after lunch and weaker on the stairs. "
+                    "Appetite is down and she forgets small things sometimes. " * 8
+                ),
             )
             for i in range(count)
         ]
 
     with patch("githubbench_delta.api.synthetic.load_config", return_value=cfg):
         env = generate_patients_envelope(
-            GeneratePatientsRequest(count=3),
+            GeneratePatientsRequest(count=5),
             gemini_fn=fake_gemini,
         )
     assert env.ok is True
     assert env.data is not None
-    assert len(env.data["patients"]) == 3
+    assert len(env.data["patients"]) == 5
     assert env.data["source"] == "gemini"
+    types = {p["scenario_type"] for p in env.data["patients"]}
+    assert types == set(SCENARIO_TYPES)
+    assert all(p.get("conversation_text") for p in env.data["patients"])
     batch = env.data["batch_id"]
     path = tmp_path / "synthetic" / f"{batch}.json"
     assert path.is_file()
@@ -102,6 +122,8 @@ def test_generate_patients_http_route(monkeypatch, tmp_path: Path):
                 medications=[],
                 living_situation="Alone",
                 risk_profile="High",
+                scenario_type="complete",
+                conversation_text="Care coordinator: How are things? Caregiver: She is tired but managing.",
             )
         ]
 
