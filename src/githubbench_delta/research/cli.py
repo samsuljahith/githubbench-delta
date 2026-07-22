@@ -191,7 +191,7 @@ def research_power(
     elif isinstance(raw, list):
         values = raw
     else:
-        console.print("[red]Pilot JSON must be a list or {\"values\": [...]}[/red]")
+        console.print('[red]Pilot JSON must be a list or {"values": [...]}[/red]')
         raise typer.Exit(1)
 
     if mde is not None:

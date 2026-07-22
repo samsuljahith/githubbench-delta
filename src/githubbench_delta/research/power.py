@@ -20,7 +20,7 @@ def _as_array(values: Sequence[float] | np.ndarray) -> np.ndarray:
 
 
 def _z_for_tail(p: float) -> float:
-    """z such that P(Z > z) = p  ⇒  erfc(z/sqrt(2)) = 2p for one-sided... 
+    """z such that P(Z > z) = p  ⇒  erfc(z/sqrt(2)) = 2p for one-sided...
 
     For two-sided alpha: z_{1-alpha/2} = sqrt(2) * erfcinv(alpha).
     For one-sided power beta: z_power = sqrt(2) * erfcinv(2*(1-power)).
