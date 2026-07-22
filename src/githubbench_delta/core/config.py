@@ -202,6 +202,8 @@ class EnvSettings(BaseSettings):
 
     anthropic_api_key: str | None = None
     openai_api_key: str | None = None
+    gemini_api_key: str | None = None
+    gemini_model: str | None = None
     minicpm_base_url: str | None = None
     minicpm_api_key: str | None = None
     minicpm_model: str | None = None

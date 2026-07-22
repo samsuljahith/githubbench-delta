@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "description": "Fixed synthetic caregiver conversations for reproducible ElderWise demos (one of each scenario_type).",
+  "patients": [
+    "patient_siti_rohana_complete.json",
+    "patient_lim_wei_ming_missing_finding.json",
+    "patient_patricia_ong_hallucination_risk.json",
+    "patient_harold_benedict_contraindication.json",
+    "patient_mei_ling_tan_incomplete.json"
+  ]
+}

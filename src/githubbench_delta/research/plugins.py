@@ -18,7 +18,9 @@ def register_experiment(exp: ResearchExperiment | dict[str, Any]) -> ResearchExp
     return model
 
 
-def experiment_plugin(fn: Callable[[], ResearchExperiment | dict[str, Any]]) -> Callable[[], ResearchExperiment]:
+def experiment_plugin(
+    fn: Callable[[], ResearchExperiment | dict[str, Any]],
+) -> Callable[[], ResearchExperiment]:
     """Decorator: function returns an experiment definition; registered on import."""
 
     def wrapper() -> ResearchExperiment:

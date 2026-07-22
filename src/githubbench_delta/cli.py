@@ -20,11 +20,11 @@ from githubbench_delta.datasets.manifest import generate_manifest, write_manifes
 from githubbench_delta.datasets.validators import DatasetValidator
 from githubbench_delta.memorization.cli import memorization_app
 from githubbench_delta.metrics.registry import catalog_entries, list_metric_ids
-from githubbench_delta.research.cli import research_app
 from githubbench_delta.observability.logging import configure_cli_logging
 from githubbench_delta.pipeline.experiment import ExperimentRunner
 from githubbench_delta.pipeline.experiment_manager import ExperimentManager
 from githubbench_delta.pipeline.models import ExperimentSpec
+from githubbench_delta.research.cli import research_app
 from githubbench_delta.tasks.registry import list_task_categories
 
 app = typer.Typer(

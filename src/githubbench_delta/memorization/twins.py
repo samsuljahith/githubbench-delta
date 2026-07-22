@@ -46,7 +46,7 @@ def _task_to_record(task: BaseTask) -> dict[str, Any]:
     """Best-effort serialization of a loaded BaseTask to a dict."""
 
     if hasattr(task, "model_dump"):
-        data = task.model_dump(mode="json")  # type: ignore[attr-defined]
+        data = task.model_dump(mode="json")
         if isinstance(data, dict) and "id" in data:
             return data
     # Fallback via common attributes

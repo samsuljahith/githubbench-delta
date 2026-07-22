@@ -68,9 +68,10 @@ class ExperimentScheduler:
             # Soft check: only flag if status is blocked/pending and no artifacts
             if experiment.status in ("blocked", "pending_data") and not has_artifacts:
                 # datasets that are known to exist in-repo
-                if ds in ("datasets_v1", "datasets_v1_showcase_slice") and (
-                    self.workspace / "datasets"
-                ).exists():
+                if (
+                    ds in ("datasets_v1", "datasets_v1_showcase_slice")
+                    and (self.workspace / "datasets").exists()
+                ):
                     continue
                 if ds == "observatory_demo_history" and (
                     (self.workspace / "docs/assets/observatory").exists()
@@ -102,9 +103,7 @@ class ExperimentScheduler:
         effective: ExperimentStatus = declared
         if declared == "runnable":
             effective = "runnable"
-        elif missing_nodes or missing_ann or missing_base or (
-            missing_datasets and missing_runs
-        ):
+        elif missing_nodes or missing_ann or missing_base or (missing_datasets and missing_runs):
             effective = "blocked"
         elif missing_datasets or missing_runs:
             effective = "pending_data" if declared == "pending_data" else "blocked"
@@ -159,7 +158,9 @@ class ExperimentScheduler:
             if matches:
                 # For T: twin *specs* may exist under memorization; require eval-like paths
                 if node_id == "T":
-                    eval_like = [m for m in matches if "evaluation" in m or "results/experiments" in m]
+                    eval_like = [
+                        m for m in matches if "evaluation" in m or "results/experiments" in m
+                    ]
                     if eval_like:
                         return True
                     continue

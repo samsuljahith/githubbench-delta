@@ -41,12 +41,15 @@ class ValidationDashboard:
             '<html lang="en"><head><meta charset="utf-8"/>',
             "<title>Research Validation Report</title>",
             "<style>",
-            "body{font-family:ui-sans-serif,system-ui,sans-serif;margin:2rem;line-height:1.45;color:#1a1a1a;}",
+            "body{font-family:ui-sans-serif,system-ui,sans-serif;"
+            "margin:2rem;line-height:1.45;color:#1a1a1a;}",
             "h1,h2{margin-top:1.6rem;} table{border-collapse:collapse;width:100%;margin:0.8rem 0;}",
-            "th,td{border:1px solid #ccc;padding:0.4rem 0.6rem;text-align:left;vertical-align:top;}",
+            "th,td{border:1px solid #ccc;padding:0.4rem 0.6rem;"
+            "text-align:left;vertical-align:top;}",
             "th{background:#f4f4f4;} .status-runnable{color:#0a7;} .status-blocked{color:#a20;}",
             ".status-pending_data{color:#a60;} .status-completed{color:#06a;}",
-            ".note{color:#555;font-size:0.92rem;} .banner{background:#fff8e6;border:1px solid #e6d8a8;padding:0.8rem;}",
+            ".note{color:#555;font-size:0.92rem;}"
+            " .banner{background:#fff8e6;border:1px solid #e6d8a8;padding:0.8rem;}",
             "</style></head><body>",
             "<h1>Research Validation Report</h1>",
             '<p class="banner"><strong>Honesty rule:</strong> this dashboard never fabricates '
@@ -58,7 +61,9 @@ class ValidationDashboard:
         ]
 
         parts.append("<h2>Evidence registry</h2>")
-        parts.append("<table><tr><th>ID</th><th>Title</th><th>Status</th><th>Unlocks</th><th>Description</th></tr>")
+        parts.append(
+            "<table><tr><th>ID</th><th>Title</th><th>Status</th><th>Unlocks</th><th>Description</th></tr>"
+        )
         for node in evidence:
             parts.append(
                 "<tr>"
@@ -118,19 +123,15 @@ class ValidationDashboard:
                 "<h2>Pending datasets (from requires)</h2>",
             ]
         )
-        pending_ds = sorted(
-            {
-                d
-                for e in experiments
-                for d in statuses[e.id].missing_datasets
-            }
-        )
+        pending_ds = sorted({d for e in experiments for d in statuses[e.id].missing_datasets})
         if pending_ds:
             parts.append("<ul>")
             parts.extend(f"<li>{_esc(d)}</li>" for d in pending_ds)
             parts.append("</ul>")
         else:
-            parts.append("<p class='note'>No missing dataset names flagged (or only runnable demos).</p>")
+            parts.append(
+                "<p class='note'>No missing dataset names flagged (or only runnable demos).</p>"
+            )
 
         parts.append("</body></html>")
         return "\n".join(parts)

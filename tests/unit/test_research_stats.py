@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import numpy as np
-import pytest
 
 from githubbench_delta.research import stats
 
@@ -60,7 +59,7 @@ def test_bh_fdr_empty():
 def test_bh_fdr_known():
     # Classic: p = [0.01, 0.04, 0.03, 0.50] alpha=0.05
     # ordered 0.01, 0.03, 0.04, 0.50; thresh 0.0125, 0.025, 0.0375, 0.05
-    # only 0.01 rejects under strict BH for this set at 0.05? 
+    # only 0.01 rejects under strict BH for this set at 0.05?
     # 0.01 <= 0.0125 yes; 0.03 > 0.025 no → only first
     out = stats.bh_fdr([0.01, 0.04, 0.03, 0.50], alpha=0.05)
     assert len(out) == 4

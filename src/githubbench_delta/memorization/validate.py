@@ -68,8 +68,7 @@ class TwinValidator:
                 errors.append("Twin repository must match parent.")
             if str(parent.get("id", "")) != parent_id and parent_id:
                 errors.append(
-                    f"parent_task_id {parent_id!r} does not match parent id "
-                    f"{parent.get('id')!r}."
+                    f"parent_task_id {parent_id!r} does not match parent id {parent.get('id')!r}."
                 )
         return errors
 

@@ -33,7 +33,13 @@ export function ErrorBlock({
   );
 }
 
-export function InsufficientBlock({ detail }: { detail?: string | null }) {
+export function InsufficientBlock({
+  detail,
+  onForceRetry,
+}: {
+  detail?: string | null;
+  onForceRetry?: () => void;
+}) {
   return (
     <div className="rounded-2xl border border-warning/30 bg-card p-6">
       <div className="text-sm font-semibold text-warning">insufficient_data</div>
@@ -41,6 +47,15 @@ export function InsufficientBlock({ detail }: { detail?: string | null }) {
         {detail ||
           "No evaluation artifacts for this experiment. The API does not invent scores."}
       </p>
+      {onForceRetry && (
+        <button
+          type="button"
+          onClick={onForceRetry}
+          className="mt-4 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground"
+        >
+          Force re-run
+        </button>
+      )}
     </div>
   );
 }
