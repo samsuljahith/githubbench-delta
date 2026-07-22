@@ -14,7 +14,7 @@ import {
   setupSearchLink,
   type AllowedAgent,
 } from "@/lib/patient";
-import { apiPatientToUi, saveSyntheticCohort } from "@/lib/syntheticStore";
+import { apiPatientToUi, appendSyntheticCohort } from "@/lib/syntheticStore";
 import { ArrowRight, Check, Cloud, HardDrive, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/setup")({
@@ -98,7 +98,7 @@ function SetupPage() {
       const ui = env.data!.patients.map((p) =>
         apiPatientToUi(p, { batchId, generatedAt, source }),
       );
-      saveSyntheticCohort(ui, batchId);
+      appendSyntheticCohort(ui, batchId);
       void navigate({
         to: "/patients",
         search: setupSearchLink({ agent: pickedAgent }),
@@ -117,7 +117,7 @@ function SetupPage() {
         description={
           step === 1
             ? "This model runs the live GitHub engineering assessment. Scores come from deterministic evaluators — not an LLM judge. Prefer MiniCPM for local / offline."
-            : "Generate 5 fresh synthetic patients now (live Gemini). Each batch includes one of each scenario type with a caregiver conversation transcript."
+            : "Generate 5 fresh synthetic patients now (live Gemini). New batches append to your session history, grouped by generation day."
         }
       />
 

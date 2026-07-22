@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import re
 import uuid
@@ -17,7 +18,10 @@ from pydantic import BaseModel, Field
 from githubbench_delta.api.facade import FacadeEnvelope
 from githubbench_delta.core.config import load_config
 
+logger = logging.getLogger(__name__)
+
 _SAFE = re.compile(r"[^A-Za-z0-9._-]+")
+_WORD_RE = re.compile(r"\b\w+\b")
 
 SCENARIO_TYPES: tuple[str, ...] = (
     "complete",
@@ -184,6 +188,7 @@ def _parse_gemini_patients(text: str, *, count: int) -> list[GeneratedPatient]:
             p = GeneratedPatient(**{**p.model_dump(), "id": f"{base}-{i}-{uuid.uuid4().hex[:4]}"})
             out[i] = p
         seen.add(p.id)
+    _soft_validate_conversations(out)
     return out
 
 
@@ -222,15 +227,39 @@ def _build_gemini_prompt(count: int) -> str:
         "Ages 68-92, mixed sex. Living situations appropriate to Singapore "
         "(HDB flat alone, with adult children, assisted living, etc.). "
         f"{scenario_mix}"
-        "For EVERY patient include conversation_text: a 150-250 word natural "
-        "caregiver-to-care-coordinator conversation transcript (spoken tone, not bullet lists). "
+        "For EVERY patient include conversation_text: a FULL multi-turn caregiver ↔ care-coordinator "
+        "dialogue transcript (spoken tone, not bullet lists). Hard requirements for EACH "
+        "conversation_text: (a) 300–450 words; (b) at least 6 alternating turns labeled clearly "
+        "as 'Care coordinator:' and 'Caregiver:' (start with Care coordinator); "
+        "(c) multi-paragraph — use blank lines between turns; "
+        "(d) natural spoken detail covering the scenario_type structural intent above. "
+        "Do not summarize; write the actual dialogue. "
         "Return JSON only with shape: "
         '{"patients":[{"id":"SYN-G-xxxx","name":"...","age":82,"sex":"F",'
         '"chief_complaint":"...","comorbidities":["..."],"medications":["..."],'
         '"living_situation":"...","risk_profile":"High|Moderate|Low",'
         '"scenario_type":"complete|missing_finding|hallucination_risk|contraindication|incomplete",'
-        '"conversation_text":"...150-250 words..."}]}.'
+        '"conversation_text":"...300-450 word multi-turn dialogue..."}]}.'
     )
+
+
+def _conversation_word_count(text: str | None) -> int:
+    if not text:
+        return 0
+    return len(_WORD_RE.findall(text))
+
+
+def _soft_validate_conversations(patients: list[GeneratedPatient]) -> None:
+    """Log short transcripts; never invent or pad conversation_text."""
+
+    for p in patients:
+        words = _conversation_word_count(p.conversation_text)
+        if words < 200:
+            logger.warning(
+                "synthetic patient %s conversation_text short (%s words < 200); keeping as-is",
+                p.id,
+                words,
+            )
 
 
 def call_gemini_generate_patients(
@@ -252,6 +281,7 @@ def call_gemini_generate_patients(
         "generationConfig": {
             "temperature": 0.95,
             "responseMimeType": "application/json",
+            "maxOutputTokens": 8192,
         },
     }
     own = client is None

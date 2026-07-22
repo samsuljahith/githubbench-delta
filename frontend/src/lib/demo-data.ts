@@ -98,19 +98,33 @@ export function getConversation(patient: SyntheticPatient): Turn[] {
     }));
   }
   if (patient.conversationText?.trim()) {
-    const chunks = patient.conversationText
-      .split(/\n+/)
+    const raw = patient.conversationText.trim();
+    // Split on blank lines or role labels; never truncate the transcript body.
+    const roleSplit = raw
+      .split(/(?=(?:^|\n)\s*(?:Care\s+coordinator|Caregiver|Coordinator|Assistant|Patient)\s*(?:\([^)]*\))?\s*:)/i)
       .map((s) => s.trim())
       .filter(Boolean);
+    const chunks =
+      roleSplit.length >= 2
+        ? roleSplit
+        : raw
+            .split(/\n+/)
+            .map((s) => s.trim())
+            .filter(Boolean);
     if (chunks.length >= 2) {
       return chunks.map((text, i) => {
         const lower = text.toLowerCase();
         const isCoordinator =
           lower.startsWith("care coordinator") ||
           lower.startsWith("coordinator") ||
-          i % 2 === 0;
-        // Strip "Role:" prefixes when present
-        const cleaned = text.replace(/^(care\s+coordinator|caregiver|assistant|patient)\s*(\([^)]*\))?\s*:\s*/i, "");
+          lower.startsWith("assistant") ||
+          (i % 2 === 0 &&
+            !lower.startsWith("caregiver") &&
+            !lower.startsWith("patient"));
+        const cleaned = text.replace(
+          /^(care\s+coordinator|caregiver|coordinator|assistant|patient)\s*(\([^)]*\))?\s*:\s*/i,
+          "",
+        );
         return {
           role: (isCoordinator ? "assistant" : "patient") as Turn["role"],
           text: cleaned || text,
@@ -118,13 +132,14 @@ export function getConversation(patient: SyntheticPatient): Turn[] {
         };
       });
     }
+    // Single block: keep the full conversation_text as one patient turn (no truncation).
     return [
       {
         role: "assistant",
         text: "Thanks for calling — please share how things have been.",
         t: "00:00",
       },
-      { role: "patient", text: patient.conversationText.trim(), t: "00:15" },
+      { role: "patient", text: raw, t: "00:15" },
     ];
   }
   const first = patient.name.split(" ")[0] || patient.name;
