@@ -43,8 +43,8 @@ Open `/setup` first.
 
 - `GET /cases/agents`
 - `POST /cases/generate-patients`
-- `POST /cases/run` (+ `loop_engineering` in response)
-- Facade `/assessment` `/evaluate` `/trust` `/memorization`
+- `POST /cases/run` (+ `loop_engineering` with trajectory stats and **all** scored metrics in `related_metrics`)
+- Facade `/assessment` `/evaluate` `/trust` `/memorization` — `/evaluate` metrics include deterministic `reasoning` (“why this score”) from evaluators, not an LLM judge
 - Healthcare layer (event-driven): `POST /healthcare/assess` (LLM RGA) then `GET /healthcare/report/{id}`; optional direct `POST /healthcare/evaluate`
 
 ## Engineering vs Healthcare on the dashboard
@@ -53,7 +53,7 @@ The patient dashboard shows two distinct evaluation layers. Both start only afte
 
 | Section | Source | Meaning |
 |---------|--------|---------|
-| **Engineering Evaluation** | Live `POST /cases/run` | GitHubBench metrics / loop engineering |
+| **Engineering Evaluation** | Live `POST /cases/run` | GitHubBench metrics with per-metric **Why this score** + loop engineering (all related metrics) |
 | **Healthcare Evaluation** | `POST /healthcare/assess` then `GET /healthcare/report/{id}` | Live LLM Rapid Geriatric Assessment → completeness, findings, safety, review |
 
 Before live run, Healthcare shows: “Healthcare evaluation has not been run yet.” Completeness reflects LLM extraction quality only (incomplete → lower ratio). See [healthcare_evaluation.md](healthcare_evaluation.md).

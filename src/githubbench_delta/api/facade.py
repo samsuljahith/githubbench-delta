@@ -161,6 +161,45 @@ def build_assessment(experiment_id: str, *, agent_id: str | None = None) -> Faca
     )
 
 
+def _latest_metric_explainability(
+    rows: list[dict[str, Any]],
+    metric_id: str,
+) -> dict[str, Any]:
+    """Take explainability from the latest evaluation row that has this metric.
+
+    Scores are still mean-averaged; prose is not invented or averaged.
+    """
+
+    reasoning = ""
+    evidence: Any = None
+    improvements: list[str] = []
+    for row in rows:
+        evaluation = row.get("evaluation") or {}
+        results = evaluation.get("metric_results") or {}
+        if not isinstance(results, dict):
+            continue
+        raw = results.get(metric_id)
+        if not isinstance(raw, dict):
+            continue
+        r = str(raw.get("reasoning") or "").strip()
+        if r:
+            reasoning = r
+        ev = raw.get("evidence")
+        if ev is not None and ev != [] and ev != {}:
+            evidence = ev
+        sug = raw.get("suggested_improvements")
+        if isinstance(sug, list) and sug:
+            improvements = [str(x) for x in sug if str(x).strip()]
+    out: dict[str, Any] = {}
+    if reasoning:
+        out["reasoning"] = reasoning
+    if evidence is not None:
+        out["evidence"] = evidence
+    if improvements:
+        out["suggested_improvements"] = improvements
+    return out
+
+
 def build_evaluate(experiment_id: str, *, agent_id: str | None = None) -> FacadeEnvelope:
     """Return real per-metric averages shaped for the ElderWise EvalMetric UI."""
 
@@ -200,16 +239,20 @@ def build_evaluate(experiment_id: str, *, agent_id: str | None = None) -> Facade
         mean_v = _mean(metric_accum[key])
         assert mean_v is not None
         value = round(mean_v * 100, 2)
-        metrics.append(
-            {
-                "key": key,
-                "label": labels.get(key, key.replace("_", " ").title()),
-                "value": value,
-                "target": 70.0,
-                "unit": "%",
-                "description": f"Mean metric score from {len(metric_accum[key])} evaluation rows",
-            }
-        )
+        n = len(metric_accum[key])
+        entry: dict[str, Any] = {
+            "key": key,
+            "label": labels.get(key, key.replace("_", " ").title()),
+            "value": value,
+            "target": 70.0,
+            "unit": "%",
+            "description": (
+                f"Deterministic mean score from {n} evaluation row"
+                f"{'' if n == 1 else 's'}; see reasoning for why this number"
+            ),
+        }
+        entry.update(_latest_metric_explainability(rows, key))
+        metrics.append(entry)
 
     return FacadeEnvelope(
         ok=True,

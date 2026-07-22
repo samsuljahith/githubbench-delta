@@ -780,6 +780,7 @@ function PatientDashboard() {
                 const Icon = passes ? TrendingUp : TrendingDown;
                 const barMax = m.unit === "%" ? 100 : 5;
                 const pct = Math.min(100, (m.value / barMax) * 100);
+                const improvements = m.suggested_improvements ?? [];
                 return (
                   <div
                     key={m.key}
@@ -811,6 +812,28 @@ function PatientDashboard() {
                         style={{ width: `${pct}%` }}
                       />
                     </div>
+                    <div className="mt-3">
+                      <div className="text-[10.5px] font-medium uppercase tracking-wider text-muted-foreground">
+                        Why this score
+                      </div>
+                      <p className="mt-1 text-xs text-foreground">
+                        {m.reasoning?.trim()
+                          ? m.reasoning
+                          : "No reasoning recorded for this run"}
+                      </p>
+                    </div>
+                    {improvements.length > 0 && (
+                      <div className="mt-2">
+                        <div className="text-[10.5px] font-medium uppercase tracking-wider text-muted-foreground">
+                          Improvements
+                        </div>
+                        <ul className="mt-1 list-inside list-disc text-xs text-muted-foreground">
+                          {improvements.map((tip) => (
+                            <li key={tip}>{tip}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 );
               })}

@@ -213,5 +213,8 @@ def test_cases_run_success_includes_loop_engineering(tmp_path: Path, monkeypatch
         assert le["step_count"] == 4
         assert le["tool_call_count"] == 2
         assert "trajectory steps" in le["summary"]
+        eval_metrics = body["data"]["evaluate"]["metrics"]
+        related = le.get("related_metrics") or []
+        assert len(related) == len(eval_metrics)
         cache_files = list(cases_dir.glob("*.json"))
         assert len(cache_files) == 1

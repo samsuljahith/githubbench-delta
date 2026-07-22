@@ -109,6 +109,10 @@ export type EvalMetric = {
   target: number;
   unit: "%" | "score";
   description: string;
+  /** Deterministic evaluator rationale (latest row); not LLM-as-judge. */
+  reasoning?: string;
+  evidence?: unknown;
+  suggested_improvements?: string[];
 };
 
 export type EvaluateData = {
@@ -199,6 +203,7 @@ export type LoopEngineering = {
     label: string;
     value?: number;
     unit?: string;
+    reasoning?: string;
   }[];
 };
 
