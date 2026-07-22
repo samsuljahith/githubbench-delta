@@ -149,10 +149,14 @@ def test_cases_run_runner_failure(monkeypatch, tmp_path: Path):
     ):
         runner = runner_cls.return_value
         runner.run = AsyncMock(side_effect=RuntimeError("provider down"))
-        body = _client().post(
-            "/cases/run",
-            json={"patient": PATIENT, "agent_id": "codex", "force": True},
-        ).json()
+        body = (
+            _client()
+            .post(
+                "/cases/run",
+                json={"patient": PATIENT, "agent_id": "codex", "force": True},
+            )
+            .json()
+        )
         assert body["ok"] is False
         assert body["status"] == "insufficient_data"
         assert "provider down" in (body["detail"] or "")

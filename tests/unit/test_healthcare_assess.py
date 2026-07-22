@@ -117,9 +117,9 @@ def test_assess_incomplete_llm_lower_completeness(healthcare_tmpdir: Path) -> No
     assert ratio < 1.0
     assert "falls_history" in outcome.report.completeness.missing_fields
     # Must not invent missing domains
-    assert "falls_history" not in (
-        outcome.assessment or {}
-    ).get("clinical_output", {}).get("fields", {})
+    assert "falls_history" not in (outcome.assessment or {}).get("clinical_output", {}).get(
+        "fields", {}
+    )
     loaded = load_assessment(outcome.assessment["assessment_id"])
     assert loaded is not None
     assert load_report(outcome.report.report_id) is not None
