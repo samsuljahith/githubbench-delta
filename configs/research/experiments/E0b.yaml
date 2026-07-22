@@ -1,0 +1,25 @@
+id: E0b
+project: mds
+title: Proxy-mode MDS on live evaluation rows
+hypothesis:
+  statement: Proxy lift L-hat is computable from existing parent evaluation rows without twin scores
+  null: N/A (engineering demo; proxy unvalidated)
+  alternative: MDS report artifacts can be produced in proxy mode
+status: runnable
+requires:
+  datasets: [datasets_v1]
+  benchmark_runs: [exp_6afa2ce533ba4e0a]
+  human_annotations: []
+  baselines: []
+  min_pairs: 0
+  min_trials: 1
+  evidence_nodes: []
+evidence_gap_ref: E0b
+stats_plan:
+  - descriptive_mds_proxy
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+  - results/memorization/**
+metadata:
+  claim_level: limited
+  note: Proxy L-hat unvalidated until E1 twin campaign

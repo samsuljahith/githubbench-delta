@@ -1,0 +1,22 @@
+# Research projects registry
+projects:
+  - id: mds
+    title: Memorization Discounted Scoring
+    description: Twin/proxy lift, adversarial twins, contamination, human calibration
+    experiments: [E0b, E1, E2, E3, E4, E5]
+  - id: scale
+    title: Scale and leaderboard validity
+    description: Multi-trial and full-corpus ranking evidence
+    experiments: [E0a, E6, E7, E4]
+  - id: observatory
+    title: Half-Life Observatory
+    description: Longitudinal differentiation decay
+    experiments: [E0d, E9]
+  - id: trust
+    title: TrustScore meta-evaluation
+    description: Weight learning and resampling validation
+    experiments: [E0c, E8]
+  - id: external
+    title: External baselines
+    description: Cross-suite comparison
+    experiments: [E10]

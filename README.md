@@ -287,6 +287,9 @@ Phases 1–8 (scaffolding through production hardening) are complete. Planned fo
 - Stronger calibration when agents emit stated confidence
 - Continued dashboard / report UX polish
 
+Research evidence gaps (what validation can run vs what is blocked):  
+**[docs/research_evidence_gaps.md](docs/research_evidence_gaps.md)**.
+
 History: [docs/phases.md](docs/phases.md).
 
 ---
@@ -315,7 +318,11 @@ This **README** is the public entry point. The docs hub is **[docs/index.md](doc
 | [Providers](docs/providers.md) | Agent backends and env vars |
 | [Installation](docs/installation.md) · [Quick Start](docs/quickstart.md) | Onboarding |
 | [CLI](docs/cli.md) · [API](docs/api.md) · [Pipeline](docs/pipeline.md) | Operations |
+| [Frontend](docs/frontend.md) · [INTEGRATION_REPORT.md](INTEGRATION_REPORT.md) | ElderWise UI + facade |
 | [Dashboard](docs/dashboard.md) · [Reports](docs/reports.md) | Explore and publish |
+| [Memorization (MDS)](docs/memorization.md) | Post-process memorization vs capability |
+| [Research execution](docs/research_execution.md) | YAML registry, artifacts, validation dashboard |
+| [Research evidence gaps](docs/research_evidence_gaps.md) | Missing evidence for publishable validation |
 | [Showcase (dry-run UX)](docs/showcase.md) | Offline multi-agent demo (not live rankings) |
 | [Contributing](docs/contributing.md) · [FAQ](docs/faq.md) · [Troubleshooting](docs/troubleshooting.md) | Community |
 

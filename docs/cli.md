@@ -54,3 +54,30 @@ Common `run` flags: `--dataset`, `--agent`, `--task`, `--trials`, `--seed`, `--c
 | `report export` | Flat CSV/JSON/… dump |
 
 See also [Reports](reports.md) and [Pipeline](pipeline.md).
+
+### `memorization`
+
+Memorization Discounted Scoring — optional post-processing (\(S_{\mathrm{obs}}=G+L\)). See [Memorization](memorization.md).
+
+| Command | Description |
+|---------|-------------|
+| `memorization analyze` | Estimate lift + write JSON / Markdown / HTML |
+| `memorization report` | Full report bundle (alias of `analyze`) |
+| `memorization export` | Export selected formats (`-f json\|markdown\|html`) |
+| `memorization generate-twins` | Emit paraphrase twin sidecar JSONL (no agent runs) |
+
+### `research`
+
+Research execution platform — YAML experiment registry, readiness, artifacts, validation dashboard. Does not run live agents or fabricate statistics. See [Research execution](research_execution.md).
+
+| Command | Purpose |
+|---------|---------|
+| `research list` | List YAML/plugin-registered experiments |
+| `research status` | Readiness (runnable / blocked / pending) |
+| `research artifacts` | Write manifest / metadata / summary (+ repro) |
+| `research publish` | Export publication tables from real aggregates only |
+| `research repro` | Environment / deps / config / seeds package |
+| `research validate` | Build `validation_report.html` |
+| `research power` | Sample size / MDE from a real pilot JSON array |
+
+Common flags: `--experiment` / `-e`, `--output` / `-o`, `--experiments-dir`, `--twins-path`.

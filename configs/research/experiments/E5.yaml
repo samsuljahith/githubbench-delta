@@ -1,0 +1,26 @@
+id: E5
+project: mds
+title: Human labels — memorized vs reasoned trajectories
+hypothesis:
+  statement: Human memorized/reasoned labels calibrate proxy or twin L-hat
+  null: no association between human label and L-hat
+  alternative: labels predict L-hat (calibration)
+status: blocked
+requires:
+  datasets: [labeled_trajectory_corpus]
+  benchmark_runs: []
+  human_annotations: [memorized_vs_reasoned_multi_rater]
+  baselines: [trajectory_judgment_rubrics]
+  min_pairs: 50
+  min_trials: 0
+  evidence_nodes: [H, T]
+evidence_gap_ref: E5
+stats_plan:
+  - mann_whitney
+  - cliffs_delta
+  - bh_fdr
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+metadata:
+  claim_level: blocked
+  blocker: zero human memorization/reasoning annotations beyond task golds

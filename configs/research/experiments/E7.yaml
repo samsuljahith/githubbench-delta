@@ -1,0 +1,25 @@
+id: E7
+project: scale
+title: Full-corpus live multi-agent ranking (60 tasks x >=3 agents)
+hypothesis:
+  statement: Full v1 corpus multi-agent ranking differs from 6-task showcase ranking
+  null: showcase rank order equals full-corpus rank order
+  alternative: full corpus changes relative agent ordering
+status: blocked
+requires:
+  datasets: [datasets_v1]
+  benchmark_runs: [full_60_task_live_multi_agent]
+  human_annotations: [failure_mode_spot_checks]
+  baselines: [external_benchmark_comparison]
+  min_pairs: 0
+  min_trials: 1
+  evidence_nodes: [F, M, X]
+evidence_gap_ref: E7
+stats_plan:
+  - bootstrap_ci
+  - bh_fdr
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+metadata:
+  claim_level: blocked
+  blocker: live evidence is 6 tasks x 2 agents only

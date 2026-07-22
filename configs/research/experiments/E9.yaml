@@ -1,0 +1,24 @@
+id: E9
+project: observatory
+title: Observatory half-life on real longitudinal history
+hypothesis:
+  statement: Differentiation D(t) decays exponentially on real multi-timestamp cohorts
+  null: no identifiable exponential decay from real cohorts
+  alternative: half-life is identifiable from >=3 real timestamps
+status: blocked
+requires:
+  datasets: [versioned_corpus_snapshots]
+  benchmark_runs: [real_multi_timestamp_cohorts]
+  human_annotations: []
+  baselines: [benchmark_aging_studies]
+  min_pairs: 0
+  min_trials: 0
+  evidence_nodes: [L]
+evidence_gap_ref: E9
+stats_plan:
+  - bootstrap_ci
+artifact_globs:
+  - results/observatory/**
+metadata:
+  claim_level: blocked
+  blocker: only one live cohort is real; demo multi-cohort history is mostly synthetic

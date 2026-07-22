@@ -1,0 +1,25 @@
+id: E10
+project: external
+title: External baseline / related-work empirical comparison
+hypothesis:
+  statement: GitHubBench-Delta agent rankings agree with external suites under matched protocol
+  null: no systematic relationship to external baseline rankings
+  alternative: rank correlation with matched external suites is non-zero
+status: blocked
+requires:
+  datasets: [external_suite_mapping]
+  benchmark_runs: [same_agents_on_external_suites]
+  human_annotations: []
+  baselines: [swe_bench_humaneval_class]
+  min_pairs: 0
+  min_trials: 0
+  evidence_nodes: [X]
+evidence_gap_ref: E10
+stats_plan:
+  - bootstrap_ci
+  - permutation_test
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+metadata:
+  claim_level: blocked
+  blocker: no external baseline evidence in the documentation set

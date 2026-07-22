@@ -36,6 +36,9 @@ flowchart LR
 | [benchmark.md](benchmark.md) | Live showcase numbers (`exp_6afa2ce533ba4e0a` only) |
 | [providers.md](providers.md) | MiniCPM, Claude, Codex setup |
 | [pipeline.md](pipeline.md) | Experiment orchestration |
+| [memorization.md](memorization.md) | Memorization Discounted Scoring (post-process) |
+| [research_execution.md](research_execution.md) | Research execution / reproducibility platform |
+| [research_evidence_gaps.md](research_evidence_gaps.md) | Missing evidence for publishable research claims |
 | [configuration.md](configuration.md) | YAML + env configuration |
 
 ---
@@ -46,8 +49,11 @@ flowchart LR
 |----------|-------------|
 | [cli.md](cli.md) | Typer CLI reference |
 | [api.md](api.md) | FastAPI endpoints |
+| [frontend.md](frontend.md) | ElderWise React UI + facade integration |
 | [dashboard.md](dashboard.md) | Interactive explorer |
 | [reports.md](reports.md) | MD / HTML / PDF / JSON / CSV |
+| [memorization.md](memorization.md) | MDS CLI + twin sidecars + dashboard |
+| [research_execution.md](research_execution.md) | Research registry, artifacts, validation dashboard |
 | [plugins.md](plugins.md) | Extension points |
 | [troubleshooting.md](troubleshooting.md) | Common failures |
 | [faq.md](faq.md) | Short answers |
@@ -62,6 +68,7 @@ flowchart LR
 | [assets/screenshots/](assets/screenshots/) | Dashboard PNGs (`overview`, `leaderboard`, `agents`, `experiment_detail`) |
 | [assets/example-report/](assets/example-report/) | Example HTML / MD reports |
 | [assets/example-benchmark/](assets/example-benchmark/) | Example leaderboard CSV |
+| [assets/memorization/](assets/memorization/) | Sample MDS report (partly synthetic) |
 
 ### Screenshots
 
@@ -80,6 +87,8 @@ Live scored showcase (authoritative numbers):
 | [phases.md](phases.md) | Completed development phases |
 | [release.md](release.md) | Release process |
 | [engineering_audit.md](engineering_audit.md) | Engineering audit notes |
+| [research_execution.md](research_execution.md) | Research execution platform (YAML registry + exporters) |
+| [research_evidence_gaps.md](research_evidence_gaps.md) | Publishability evidence gaps (MDS / Trust / Observatory) |
 
 ---
 

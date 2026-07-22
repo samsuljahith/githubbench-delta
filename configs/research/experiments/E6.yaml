@@ -1,0 +1,26 @@
+id: E6
+project: scale
+title: Multi-trial live leaderboard (trial_count>=3)
+hypothesis:
+  statement: Agent rankings stabilize under multi-trial evaluation
+  null: rank order under trial_count=1 equals multi-trial rank order
+  alternative: multi-trial changes ranking or shrinks uncertainty
+status: blocked
+requires:
+  datasets: [datasets_v1]
+  benchmark_runs: [multi_trial_live_minicpm_codex_claude]
+  human_annotations: []
+  baselines: [external_coding_agent_leaderboards]
+  min_pairs: 0
+  min_trials: 3
+  evidence_nodes: [M]
+evidence_gap_ref: E6
+stats_plan:
+  - bootstrap_ci
+  - permutation_test
+  - bh_fdr
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+metadata:
+  claim_level: blocked
+  blocker: all documented live/showcase experiments use trial_count=1
