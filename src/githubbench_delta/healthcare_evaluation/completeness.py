@@ -17,7 +17,9 @@ def evaluate_completeness(
 ) -> CompletenessResult | None:
     """Return completeness when any evidence exists; else None (caller → insufficient_data)."""
 
-    has_fields = bool(clinical and any(field_has_value(v) for v in (clinical.fields or {}).values()))
+    has_fields = bool(
+        clinical and any(field_has_value(v) for v in (clinical.fields or {}).values())
+    )
     has_narrative = bool(clinical and clinical.narrative and clinical.narrative.strip())
     has_transcript = bool(transcript and transcript.strip())
     if not (has_fields or has_narrative or has_transcript):

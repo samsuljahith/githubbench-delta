@@ -8,7 +8,6 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-
 # Rapid Geriatric Assessment–style fields expected for completeness checks.
 REQUIRED_RGA_FIELDS: tuple[str, ...] = (
     "chief_complaint",

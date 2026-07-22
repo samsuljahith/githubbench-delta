@@ -100,11 +100,4 @@ def evaluate_critical_findings(
             )
         )
 
-    # Structured empty while patient chrome implies risk (optional info-level).
-    if clinical and not field_has_value(fields.get("falls_history")):
-        # Only add info if no falls cue already warned
-        if not any(f.finding_id == "missing_structured_falls" for f in findings):
-            if not field_has_value(fields.get("risk_flags")):
-                pass  # no extra noise without evidence
-
     return findings

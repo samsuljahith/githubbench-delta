@@ -255,9 +255,7 @@ def _inspect_agent_run(experiment_id: str, *, agent_id: str) -> dict[str, Any]:
                     step_count = max(step_count, len(steps))
                     if not isinstance(metrics.get("tool_call_count"), (int, float)):
                         tool_call_count = sum(
-                            1
-                            for step in steps
-                            if isinstance(step, dict) and step.get("tool_call")
+                            1 for step in steps if isinstance(step, dict) and step.get("tool_call")
                         )
                 break  # first matching unit
 

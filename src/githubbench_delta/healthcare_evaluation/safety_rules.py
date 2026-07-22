@@ -51,19 +51,21 @@ def evaluate_safety_rules(
     fields = (clinical.fields if clinical else {}) or {}
 
     # Falls mentioned without mitigation language.
-    if re.search(r"\bfell\b|\bfalls?\b|\bfalling\b", lower):
-        if not any(re.search(p, lower) for p in _MITIGATION_CUES):
-            if not field_has_value(fields.get("risk_flags")):
-                warnings.append(
-                    SafetyWarning(
-                        rule_id="falls_without_mitigation_note",
-                        message=(
-                            "Falls-related language present without documented mitigation, "
-                            "follow-up, or risk_flags — clinician review recommended."
-                        ),
-                        evidence_span="falls",
-                    )
-                )
+    if (
+        re.search(r"\bfell\b|\bfalls?\b|\bfalling\b", lower)
+        and not any(re.search(p, lower) for p in _MITIGATION_CUES)
+        and not field_has_value(fields.get("risk_flags"))
+    ):
+        warnings.append(
+            SafetyWarning(
+                rule_id="falls_without_mitigation_note",
+                message=(
+                    "Falls-related language present without documented mitigation, "
+                    "follow-up, or risk_flags — clinician review recommended."
+                ),
+                evidence_span="falls",
+            )
+        )
 
     # High-risk med keywords without follow-up / review note.
     med_hit: str | None = None
@@ -85,30 +87,30 @@ def evaluate_safety_rules(
         )
 
     # Polypharmacy / multiple meds listed but medications field empty.
-    if re.search(r"\bpolypharmacy\b|\bmultiple\s+medications\b", lower):
-        if not field_has_value(fields.get("medications")):
-            warnings.append(
-                SafetyWarning(
-                    rule_id="polypharmacy_without_med_list",
-                    message=(
-                        "Polypharmacy language present but structured medications list is empty."
-                    ),
-                    evidence_span="polypharmacy",
-                )
+    if re.search(r"\bpolypharmacy\b|\bmultiple\s+medications\b", lower) and not field_has_value(
+        fields.get("medications")
+    ):
+        warnings.append(
+            SafetyWarning(
+                rule_id="polypharmacy_without_med_list",
+                message=("Polypharmacy language present but structured medications list is empty."),
+                evidence_span="polypharmacy",
             )
+        )
 
     # Cognition concern without structured cognition field (if not already covered).
-    if re.search(r"\bconfused\b|\bdementia\b|\bdisorient", lower):
-        if not field_has_value(fields.get("cognition")):
-            warnings.append(
-                SafetyWarning(
-                    rule_id="cognition_cue_without_structured_field",
-                    message=(
-                        "Cognition-related language without structured cognition field — "
-                        "incomplete documentation warning."
-                    ),
-                    evidence_span="cognition",
-                )
+    if re.search(r"\bconfused\b|\bdementia\b|\bdisorient", lower) and not field_has_value(
+        fields.get("cognition")
+    ):
+        warnings.append(
+            SafetyWarning(
+                rule_id="cognition_cue_without_structured_field",
+                message=(
+                    "Cognition-related language without structured cognition field — "
+                    "incomplete documentation warning."
+                ),
+                evidence_span="cognition",
             )
+        )
 
     return warnings

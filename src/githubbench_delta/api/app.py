@@ -21,8 +21,7 @@ from githubbench_delta.metrics.registry import catalog_entries
 def _cors_origins() -> list[str]:
     raw = os.environ.get(
         "GITHUBBENCH_CORS_ORIGINS",
-        "http://localhost:5173,http://127.0.0.1:5173,"
-        "http://localhost:8080,http://127.0.0.1:8080",
+        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:8080,http://127.0.0.1:8080",
     )
     return [o.strip() for o in raw.split(",") if o.strip()]
 

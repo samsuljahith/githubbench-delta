@@ -38,9 +38,9 @@ class ExtractResult:
 def resolve_llm_endpoint() -> LlmEndpoint | None:
     """OpenAI if key set; else local MiniCPM OpenAI-compatible; else None."""
 
-    openai_key = (
-        os.environ.get("OPENAI_API_KEY") or ""
-    ).strip() or _env_from_config("openai_api_key")
+    openai_key = (os.environ.get("OPENAI_API_KEY") or "").strip() or _env_from_config(
+        "openai_api_key"
+    )
     model_override = (os.environ.get("HEALTHCARE_ASSESS_MODEL") or "").strip()
 
     if openai_key:
@@ -51,15 +51,17 @@ def resolve_llm_endpoint() -> LlmEndpoint | None:
             model=model_override or "gpt-4o-mini",
         )
 
-    base = (
-        os.environ.get("MINICPM_BASE_URL") or ""
-    ).strip() or _env_from_config("minicpm_base_url")
+    base = (os.environ.get("MINICPM_BASE_URL") or "").strip() or _env_from_config(
+        "minicpm_base_url"
+    )
     if not base:
         return None
 
     key = (
-        os.environ.get("MINICPM_API_KEY") or ""
-    ).strip() or _env_from_config("minicpm_api_key") or "ollama"
+        (os.environ.get("MINICPM_API_KEY") or "").strip()
+        or _env_from_config("minicpm_api_key")
+        or "ollama"
+    )
     model = (
         model_override
         or (os.environ.get("MINICPM_MODEL") or "").strip()
@@ -72,6 +74,7 @@ def resolve_llm_endpoint() -> LlmEndpoint | None:
         base_url=base,
         model=model,
     )
+
 
 def _env_from_config(attr: str) -> str:
     try:

@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import uuid
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 from githubbench_delta.healthcare_evaluation.engine import evaluate_healthcare
 from githubbench_delta.healthcare_evaluation.models import (
