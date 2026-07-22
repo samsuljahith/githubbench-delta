@@ -142,7 +142,7 @@ The following are **critical** if the project is marketed as production-safe for
 |----------|-----|
 | Open-source release (trusted local use) | Suitable after documenting limitations + fixing H3/H6/H7 defaults |
 | Production multi-user / untrusted data | Not suitable until C1–C4 + H7 addressed |
-| Research publication / methodology showcase | Suitable (deterministic metrics + corpus + dry-run are real) |
+| Research publication / methodology showcase | Suitable for **methodology / harness** claims (deterministic metrics + corpus). **Not** sufficient alone for publishable MDS / TrustScore / Observatory *empirical* claims — see [research_evidence_gaps.md](research_evidence_gaps.md) |
 | Portfolio showcase | Suitable with honest README limitations section |
 
 ---

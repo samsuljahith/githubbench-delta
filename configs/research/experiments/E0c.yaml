@@ -1,0 +1,24 @@
+id: E0c
+project: trust
+title: TrustScore on existing evaluation rows
+hypothesis:
+  statement: TrustScore meta-evaluation is computable from existing ResultStore rows
+  null: N/A (software demo; weights unvalidated)
+  alternative: TrustScore report artifacts can be produced
+status: runnable
+requires:
+  datasets: [datasets_v1]
+  benchmark_runs: [exp_6afa2ce533ba4e0a]
+  human_annotations: []
+  baselines: []
+  min_pairs: 0
+  min_trials: 1
+  evidence_nodes: []
+evidence_gap_ref: E0c
+stats_plan:
+  - descriptive_trust
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+metadata:
+  claim_level: limited
+  note: Equal weights and freshness prior uncalibrated

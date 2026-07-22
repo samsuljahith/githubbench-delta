@@ -1,0 +1,26 @@
+id: E2
+project: mds
+title: Adversarial twins (surface form; golds fixed)
+hypothesis:
+  statement: Memorization lift is stable under adversarial paraphrase that preserves intent and golds
+  null: mean(L_adv - L_parent) = 0 under intent-preserving adversarial twins
+  alternative: lift differs under adversarial surface changes
+status: blocked
+requires:
+  datasets: [adversarial_twin_catalog]
+  benchmark_runs: [paired_parent_adversarial_twin]
+  human_annotations: [intent_preservation_checks]
+  baselines: [adversarial_paraphrase_suites]
+  min_pairs: 30
+  min_trials: 1
+  evidence_nodes: [A, T, H]
+evidence_gap_ref: E2
+stats_plan:
+  - paired_bootstrap
+  - wilcoxon
+  - cliffs_delta
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+metadata:
+  claim_level: blocked
+  blocker: no adversarial twin dataset and no paired runs

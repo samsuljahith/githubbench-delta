@@ -86,6 +86,9 @@ Authoritative live experiment: **`exp_6afa2ce533ba4e0a`**
 - Dashboard / report UX polish
 - Optional: regenerate screenshots against `exp_6afa2ce533ba4e0a` for visual/numeric alignment
 
+Research publishability (MDS / TrustScore / Observatory validation) is tracked separately in
+**[docs/research_evidence_gaps.md](docs/research_evidence_gaps.md)** — what can run today vs blocked evidence.
+
 ---
 
 ## Repository readiness checklist

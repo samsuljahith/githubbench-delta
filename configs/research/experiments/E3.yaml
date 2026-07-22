@@ -1,0 +1,25 @@
+id: E3
+project: mds
+title: Contaminated-prompt audits (external prior on L)
+hypothesis:
+  statement: Task contamination scores predict memorization lift L
+  null: corr(contamination, L) = 0
+  alternative: positive association between contamination prior and L
+status: blocked
+requires:
+  datasets: [contamination_audit_v1]
+  benchmark_runs: []
+  human_annotations: [contamination_true_positive_review]
+  baselines: [contamination_audit_protocols]
+  min_pairs: 0
+  min_trials: 0
+  evidence_nodes: [C]
+evidence_gap_ref: E3
+stats_plan:
+  - bootstrap_ci
+  - permutation_test
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+metadata:
+  claim_level: blocked
+  blocker: no contamination audit dataset for v1

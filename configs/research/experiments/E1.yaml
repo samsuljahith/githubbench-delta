@@ -1,0 +1,26 @@
+id: E1
+project: mds
+title: Twin vs proxy memorization lift
+hypothesis:
+  statement: Twin-measured L differs from proxy L
+  null: mean(L_twin - L_proxy) = 0
+  alternative: mean(L_twin - L_proxy) != 0
+status: blocked
+requires:
+  datasets: [twin_eval_rows]
+  benchmark_runs: [paired_parent_twin]
+  human_annotations: []
+  baselines: []
+  min_pairs: 30
+  min_trials: 1
+  evidence_nodes: [T]
+evidence_gap_ref: E1
+stats_plan:
+  - paired_bootstrap
+  - wilcoxon
+  - bh_fdr
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+metadata:
+  claim_level: blocked
+  blocker: no twin evaluation rows in any live experiment

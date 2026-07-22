@@ -18,7 +18,9 @@ from githubbench_delta.core.config import clear_config_cache, load_config
 from githubbench_delta.core.errors import GitHubBenchError
 from githubbench_delta.datasets.manifest import generate_manifest, write_manifest
 from githubbench_delta.datasets.validators import DatasetValidator
+from githubbench_delta.memorization.cli import memorization_app
 from githubbench_delta.metrics.registry import catalog_entries, list_metric_ids
+from githubbench_delta.research.cli import research_app
 from githubbench_delta.observability.logging import configure_cli_logging
 from githubbench_delta.pipeline.experiment import ExperimentRunner
 from githubbench_delta.pipeline.experiment_manager import ExperimentManager
@@ -40,6 +42,8 @@ experiment_app = typer.Typer(help="Create and run evaluation experiments.")
 app.add_typer(experiment_app, name="experiment")
 report_app = typer.Typer(help="Generate publication reports from experiment artifacts.")
 app.add_typer(report_app, name="report")
+app.add_typer(memorization_app, name="memorization")
+app.add_typer(research_app, name="research")
 
 console = Console(width=120, soft_wrap=True)
 logger = logging.getLogger("githubbench_delta.cli")

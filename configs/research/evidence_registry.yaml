@@ -1,0 +1,49 @@
+# Machine-readable evidence nodes for the validation dashboard.
+# Mirrors docs/research_evidence_gaps.md — statuses reflect live evidence only.
+# Never invent presence; update when real artifacts land.
+nodes:
+  - id: T
+    title: Twin evaluation rows
+    status: absent
+    description: Scored parent/twin paired evaluation rows in ResultStore
+    unlocks: [E1, E2, E4]
+  - id: A
+    title: Adversarial twin catalog
+    status: absent
+    description: Intent-preserving adversarial twins beyond synonym reorder
+    unlocks: [E2]
+  - id: C
+    title: Contamination audit for v1
+    status: absent
+    description: Per-task web/GitHub/training-proxy overlap reports
+    unlocks: [E3]
+  - id: M
+    title: Multi-trial live runs
+    status: absent
+    description: trial_count>=3 on live MiniCPM/Codex/Claude
+    unlocks: [E6, E4, E8]
+  - id: F
+    title: Full-corpus live ranking
+    status: partial
+    description: Live evidence is 6 tasks x 2 agents; need 60 tasks x >=3 agents
+    unlocks: [E7]
+  - id: H
+    title: Human memorization/reasoning labels
+    status: absent
+    description: Multi-rater trajectory labels + agreement
+    unlocks: [E5]
+  - id: L
+    title: Real longitudinal observatory cohorts
+    status: partial
+    description: Only one live cohort is real; demo history mostly synthetic
+    unlocks: [E9]
+  - id: X
+    title: External baseline comparison layer
+    status: absent
+    description: SWE-bench / HumanEval-class mapping and matched runs
+    unlocks: [E10]
+  - id: W
+    title: Trust weight ground truth
+    status: absent
+    description: Held-out reliability targets or expert trust ratings
+    unlocks: [E8]

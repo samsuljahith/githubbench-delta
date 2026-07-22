@@ -1,0 +1,158 @@
+{
+  "experiment_ids": [
+    "exp_6afa2ce533ba4e0a"
+  ],
+  "generated_at": "2026-07-20T09:36:17.051648Z",
+  "mode": "twin",
+  "lifts": [
+    {
+      "agent_id": "codex",
+      "mean_lift": 0.03700000000000003,
+      "mean_obs": 0.682,
+      "mean_generalization": 0.645,
+      "n_pairs": 2,
+      "mode": "twin",
+      "pairs": [
+        {
+          "parent_task_id": "gb-issue-001",
+          "twin_task_id": "gb-issue-001__twin_para_01",
+          "agent_id": "codex",
+          "s_obs": 0.682,
+          "s_twin": 0.65,
+          "lift": 0.03200000000000003,
+          "generalization": 0.65,
+          "mode": "twin",
+          "metadata": {}
+        },
+        {
+          "parent_task_id": "gb-repo-001",
+          "twin_task_id": "gb-repo-001__twin_para_01",
+          "agent_id": "codex",
+          "s_obs": 0.682,
+          "s_twin": 0.64,
+          "lift": 0.04200000000000004,
+          "generalization": 0.64,
+          "mode": "twin",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "agent_id": "minicpm",
+      "mean_lift": 0.12900000000000003,
+      "mean_obs": 0.539,
+      "mean_generalization": 0.41000000000000003,
+      "n_pairs": 2,
+      "mode": "twin",
+      "pairs": [
+        {
+          "parent_task_id": "gb-issue-001",
+          "twin_task_id": "gb-issue-001__twin_para_01",
+          "agent_id": "minicpm",
+          "s_obs": 0.539,
+          "s_twin": 0.42,
+          "lift": 0.11900000000000005,
+          "generalization": 0.42,
+          "mode": "twin",
+          "metadata": {}
+        },
+        {
+          "parent_task_id": "gb-repo-001",
+          "twin_task_id": "gb-repo-001__twin_para_01",
+          "agent_id": "minicpm",
+          "s_obs": 0.539,
+          "s_twin": 0.4,
+          "lift": 0.139,
+          "generalization": 0.4,
+          "mode": "twin",
+          "metadata": {}
+        }
+      ]
+    }
+  ],
+  "breakdowns": [
+    {
+      "agent_id": "codex",
+      "observed_score": 0.682,
+      "generalization": 0.41350000000000003,
+      "memorization_lift": 0.2685,
+      "discounted_score": 0.41350000000000003,
+      "residual": 0.0,
+      "mode": "twin",
+      "n_tasks": 2,
+      "notes": []
+    },
+    {
+      "agent_id": "minicpm",
+      "observed_score": 0.539,
+      "generalization": 0.22450000000000003,
+      "memorization_lift": 0.3145,
+      "discounted_score": 0.22450000000000003,
+      "residual": 0.0,
+      "mode": "twin",
+      "n_tasks": 2,
+      "notes": []
+    }
+  ],
+  "posteriors": [
+    {
+      "agent_id": "codex",
+      "mean": 0.2685,
+      "lower": 0.0,
+      "upper": 0.6569565059068374,
+      "level": 0.95,
+      "alpha": 1.074,
+      "beta": 2.926,
+      "discounted_mean": 0.41350000000000003,
+      "discounted_lower": 0.025043494093162644,
+      "discounted_upper": 0.682,
+      "mean_obs": 0.682
+    },
+    {
+      "agent_id": "minicpm",
+      "mean": 0.3145,
+      "lower": 0.0,
+      "upper": 0.7214838198562966,
+      "level": 0.95,
+      "alpha": 1.258,
+      "beta": 2.742,
+      "discounted_mean": 0.22450000000000003,
+      "discounted_lower": 0.0,
+      "discounted_upper": 0.539,
+      "mean_obs": 0.539
+    }
+  ],
+  "twin_specs": [
+    {
+      "id": "gb-repo-001__twin_para_01",
+      "parent_task_id": "gb-repo-001",
+      "twin_kind": "paraphrase",
+      "generator_version": "1.0.0",
+      "record": {}
+    },
+    {
+      "id": "gb-issue-001__twin_para_01",
+      "parent_task_id": "gb-issue-001",
+      "twin_kind": "paraphrase",
+      "generator_version": "1.0.0",
+      "record": {}
+    }
+  ],
+  "notes": [
+    "Demo uses live mean scores (MiniCPM 0.539, Codex 0.682) with synthetic twin gaps."
+  ],
+  "assumptions": [
+    "Observed score decomposes as S_obs = G + L (generalization + memorization lift).",
+    "When twin scores exist: L = max(0, S_obs - S_twin) and G = S_obs - L.",
+    "When twins are absent: proxy L from (1 - consistency/grounding metrics) \u00d7 0.5.",
+    "BayesianDiscountModel uses a Beta(1,1) prior with fractional lift updates.",
+    "MDS is post-processing only; it does not modify benchmark metrics or artifacts.",
+    "This model does not causally identify memorization \u2014 twin agreement is correlational."
+  ],
+  "metadata": {
+    "demo": true,
+    "synthetic_twins": true
+  },
+  "output_dir": "",
+  "artifacts": []
+}

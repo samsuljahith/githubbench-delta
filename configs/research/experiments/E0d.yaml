@@ -1,0 +1,25 @@
+id: E0d
+project: observatory
+title: Observatory demo half-life fit
+hypothesis:
+  statement: Observatory software can fit half-life curves on demo/synthetic cohort history
+  null: N/A (demo; synthetic cohorts do not support publishable half-life)
+  alternative: Demo report and fit artifacts exist
+status: runnable
+requires:
+  datasets: [observatory_demo_history]
+  benchmark_runs: []
+  human_annotations: []
+  baselines: []
+  min_pairs: 0
+  min_trials: 0
+  evidence_nodes: []
+evidence_gap_ref: E0d
+stats_plan:
+  - descriptive_half_life_demo
+artifact_globs:
+  - results/observatory/**
+  - docs/assets/observatory/**
+metadata:
+  claim_level: limited
+  note: Real multi-timestamp cohorts required for E9

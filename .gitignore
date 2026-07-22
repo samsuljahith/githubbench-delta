@@ -30,6 +30,12 @@ logs/*
 !logs/.gitkeep
 results/*
 !results/.gitkeep
+!results/memorization/
+results/memorization/*
+!results/memorization/.gitkeep
+!results/research/
+results/research/*
+!results/research/.gitkeep
 reports/*
 !reports/.gitkeep
 *.db

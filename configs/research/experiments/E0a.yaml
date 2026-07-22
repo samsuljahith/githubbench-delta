@@ -1,0 +1,25 @@
+id: E0a
+project: scale
+title: Live showcase ranking (6-task MiniCPM vs Codex)
+hypothesis:
+  statement: On the live 6-task showcase, agent score rankings are computable from existing ResultStore rows
+  null: N/A (descriptive ranking; not a confirmatory test)
+  alternative: Ranking tables exist for documented live experiment
+status: runnable
+requires:
+  datasets: [datasets_v1_showcase_slice]
+  benchmark_runs: [exp_6afa2ce533ba4e0a]
+  human_annotations: []
+  baselines: []
+  min_pairs: 0
+  min_trials: 1
+  evidence_nodes: []
+evidence_gap_ref: E0a
+stats_plan:
+  - descriptive_rank
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+  - results/experiments/*/experiment.json
+metadata:
+  claim_level: limited
+  note: Underpowered for publishable peer-metric claims (trial_count=1, n=6 tasks)

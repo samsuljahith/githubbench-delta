@@ -1,0 +1,25 @@
+id: E4
+project: mds
+title: Hierarchical pooling across categories
+hypothesis:
+  statement: Category-level hierarchical pooling improves uncertainty estimates vs pooled flat means
+  null: hierarchical and flat interval coverage are equivalent
+  alternative: hierarchical pooling yields better calibrated uncertainty
+status: blocked
+requires:
+  datasets: [datasets_v1]
+  benchmark_runs: [category_balanced_multi_trial]
+  human_annotations: []
+  baselines: []
+  min_pairs: 0
+  min_trials: 3
+  evidence_nodes: [M, T]
+evidence_gap_ref: E4
+stats_plan:
+  - bootstrap_ci
+  - bh_fdr
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+metadata:
+  claim_level: blocked
+  blocker: blocked on coverage + multi-trial / twins

@@ -1,0 +1,25 @@
+id: E8
+project: trust
+title: TrustScore weight learning / Bayesian resampling validation
+hypothesis:
+  statement: Learned or resampled TrustScore weights improve calibration vs equal weights
+  null: equal weights w_i=0.1 match held-out reliability targets as well as learned weights
+  alternative: learned weights improve calibration
+status: blocked
+requires:
+  datasets: [trust_heldout_targets]
+  benchmark_runs: [multi_trial_archives]
+  human_annotations: [expert_trust_ratings]
+  baselines: [meta_evaluation_frameworks]
+  min_pairs: 0
+  min_trials: 3
+  evidence_nodes: [W, M]
+evidence_gap_ref: E8
+stats_plan:
+  - bootstrap_ci
+  - permutation_test
+artifact_globs:
+  - results/experiments/*/evaluation_results.json
+metadata:
+  claim_level: blocked
+  blocker: no trust ground-truth labels; trial_count=1 limits resampling
