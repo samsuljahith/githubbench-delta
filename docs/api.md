@@ -23,10 +23,15 @@ Thin wrappers over `ExperimentRepository` + `MemorizationEngine`. **Never fabric
 
 | Method | Path | Body | Description |
 |--------|------|------|-------------|
+| GET | `/cases/agents` | — | Agent catalog for setup wizard (minicpm / claude / codex) |
+| POST | `/cases/generate-patients` | `{ count? }` | Gemini synthetic patients (1–5); requires `GEMINI_API_KEY` |
+| POST | `/cases/run` | `{ patient, agent_id?, force? }` | Live 1-unit experiment; returns scores + `loop_engineering`; failed agent → `insufficient_data` |
 | POST | `/assessment` | `{ experiment_id?, agent_id? }` | Domains from mean `group_scores` (0–5) |
 | POST | `/evaluate` | `{ experiment_id?, agent_id? }` | Per-metric means as `%` |
 | POST | `/trust` | `{ experiment_id?, agent_id? }` | Equal-weight composite 0–100 + breakdown |
 | POST | `/memorization` | `{ experiment_ids?, experiment_id?, twins_path? }` | MDS report JSON |
+
+Case runs: `agent_id` overrides `GITHUBBENCH_CASE_AGENT`. Cache only on successful agent runs (`results/cases/{patient_id}__{agent_id}.json`). Gemini is for synthetic chrome only — not judging.
 
 Envelope:
 
@@ -41,6 +46,18 @@ or
 ```
 
 See [Frontend](frontend.md) and [INTEGRATION_REPORT.md](../INTEGRATION_REPORT.md).
+
+## Healthcare evaluation (additive)
+
+Event-driven: live LLM RGA from conversation, then rule checks. Separate from the 18 engineering metrics and from `/cases/run` scoring. Details: [Healthcare Evaluation Layer](healthcare_evaluation.md).
+
+| Method | Path | Body | Description |
+|--------|------|------|-------------|
+| POST | `/healthcare/assess` | `{ patient?, transcript?, conversation? }` | LLM extract RGA → persist → evaluate; returns `assessment_id` + `report_id` |
+| POST | `/healthcare/evaluate` | `{ patient?, clinical_output?, transcript?, review_status? }` | Rule engine only on supplied evidence |
+| GET | `/healthcare/report/{id}` | — | Load stored report; missing → `insufficient_data` |
+
+Requires `OPENAI_API_KEY` or `MINICPM_BASE_URL`. Empty transcript / no LLM / empty extraction → `insufficient_data` (no fabricated scores).
 
 ## Dashboard
 

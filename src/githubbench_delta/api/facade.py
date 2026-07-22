@@ -100,17 +100,14 @@ def _insufficient(experiment_id: str, detail: str) -> FacadeEnvelope:
     )
 
 
-@facade_router.post("/assessment", response_model=FacadeEnvelope)
-def post_assessment(body: ExperimentRequest) -> FacadeEnvelope:
+def build_assessment(experiment_id: str, *, agent_id: str | None = None) -> FacadeEnvelope:
     """Map real evaluation group_scores into assessment-style domains."""
 
-    experiment_id = _resolve_experiment_id(body.experiment_id)
     repo = _repo()
-    rows = _filter_rows(repo.load_evaluations_raw(experiment_id), agent_id=body.agent_id)
+    rows = _filter_rows(repo.load_evaluations_raw(experiment_id), agent_id=agent_id)
     if not rows:
         return _insufficient(experiment_id, "No evaluation rows for experiment")
 
-    # Average group_scores across matching rows
     group_accum: dict[str, list[float]] = {}
     agents: set[str] = set()
     for row in rows:
@@ -164,13 +161,11 @@ def post_assessment(body: ExperimentRequest) -> FacadeEnvelope:
     )
 
 
-@facade_router.post("/evaluate", response_model=FacadeEnvelope)
-def post_evaluate(body: ExperimentRequest) -> FacadeEnvelope:
+def build_evaluate(experiment_id: str, *, agent_id: str | None = None) -> FacadeEnvelope:
     """Return real per-metric averages shaped for the ElderWise EvalMetric UI."""
 
-    experiment_id = _resolve_experiment_id(body.experiment_id)
     repo = _repo()
-    rows = _filter_rows(repo.load_evaluations_raw(experiment_id), agent_id=body.agent_id)
+    rows = _filter_rows(repo.load_evaluations_raw(experiment_id), agent_id=agent_id)
     if not rows:
         return _insufficient(experiment_id, "No evaluation rows for experiment")
 
@@ -204,7 +199,6 @@ def post_evaluate(body: ExperimentRequest) -> FacadeEnvelope:
     for key in sorted(metric_accum):
         mean_v = _mean(metric_accum[key])
         assert mean_v is not None
-        # Scores are 0–1 → report as %
         value = round(mean_v * 100, 2)
         metrics.append(
             {
@@ -224,19 +218,17 @@ def post_evaluate(body: ExperimentRequest) -> FacadeEnvelope:
         data={
             "metrics": metrics,
             "n_rows": len(rows),
-            "agent_id": body.agent_id,
+            "agent_id": agent_id,
             "source": "evaluation_results",
         },
     )
 
 
-@facade_router.post("/trust", response_model=FacadeEnvelope)
-def post_trust(body: ExperimentRequest) -> FacadeEnvelope:
+def build_trust(experiment_id: str, *, agent_id: str | None = None) -> FacadeEnvelope:
     """Equal-weight composite of group_scores (0–100). Documented formula; no fabrication."""
 
-    experiment_id = _resolve_experiment_id(body.experiment_id)
     repo = _repo()
-    rows = _filter_rows(repo.load_evaluations_raw(experiment_id), agent_id=body.agent_id)
+    rows = _filter_rows(repo.load_evaluations_raw(experiment_id), agent_id=agent_id)
     if not rows:
         return _insufficient(experiment_id, "No evaluation rows for experiment")
 
@@ -284,8 +276,38 @@ def post_trust(body: ExperimentRequest) -> FacadeEnvelope:
             "breakdown": breakdown,
             "method": "equal-weight mean of evaluation.group_scores × 100",
             "n_rows": len(rows),
-            "agent_id": body.agent_id,
+            "agent_id": agent_id,
         },
+    )
+
+
+@facade_router.post("/assessment", response_model=FacadeEnvelope)
+def post_assessment(body: ExperimentRequest) -> FacadeEnvelope:
+    """Map real evaluation group_scores into assessment-style domains."""
+
+    return build_assessment(
+        _resolve_experiment_id(body.experiment_id),
+        agent_id=body.agent_id,
+    )
+
+
+@facade_router.post("/evaluate", response_model=FacadeEnvelope)
+def post_evaluate(body: ExperimentRequest) -> FacadeEnvelope:
+    """Return real per-metric averages shaped for the ElderWise EvalMetric UI."""
+
+    return build_evaluate(
+        _resolve_experiment_id(body.experiment_id),
+        agent_id=body.agent_id,
+    )
+
+
+@facade_router.post("/trust", response_model=FacadeEnvelope)
+def post_trust(body: ExperimentRequest) -> FacadeEnvelope:
+    """Equal-weight composite of group_scores (0–100). Documented formula; no fabrication."""
+
+    return build_trust(
+        _resolve_experiment_id(body.experiment_id),
+        agent_id=body.agent_id,
     )
 
 

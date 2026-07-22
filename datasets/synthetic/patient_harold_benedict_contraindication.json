@@ -1,0 +1,23 @@
+{
+  "id": "SYN-FIX-harold-contraindication",
+  "scenario_type": "contraindication",
+  "name": "Harold Benedict",
+  "patient": {
+    "id": "SYN-FIX-harold-contraindication",
+    "name": "Harold Benedict",
+    "age": 84,
+    "sex": "M",
+    "chief_complaint": "Daytime drowsiness and unsteady gait on long-term lorazepam",
+    "comorbidities": ["insomnia", "mild chronic kidney disease", "hypertension"],
+    "medications": ["lorazepam 1mg at bedtime", "amlodipine 5mg", "vitamin D"],
+    "living_situation": "Lives with wife Elaine in a landed house in Serangoon",
+    "risk_profile": "High"
+  },
+  "conversation_text": "Care coordinator: Elaine, how has Harold been since the last review?\nCaregiver (Elaine): Harold turned eighty-four in May. He tires quickly — dozes in the armchair before lunch — and his legs feel rubbery when we walk to the void deck; he uses a stick now. He's eating less porridge and the GP chart shows about two kilos lost since Chinese New Year. He forgets which day recycling is and sometimes asks me the same question about the helper's day off. He's still on lorazepam one milligram every night — prescribed years ago for sleep after his brother's funeral — and I worry because he's drowsy in the mornings and a bit unsteady. The rest of his meds are blood pressure and vitamin D. No acute crisis, but the benzodiazepine plus frailty has us concerned.",
+  "conversation": [
+    {"role": "assistant", "t": "00:00", "text": "Elaine, how has Harold been since the last review?"},
+    {"role": "patient", "t": "00:10", "text": "Harold turned eighty-four in May. He tires quickly — dozes in the armchair before lunch — and his legs feel rubbery when we walk to the void deck; he uses a stick now."},
+    {"role": "patient", "t": "00:42", "text": "He's eating less porridge and the GP chart shows about two kilos lost since Chinese New Year. He forgets which day recycling is and sometimes asks me the same question about the helper's day off."},
+    {"role": "patient", "t": "01:18", "text": "He's still on lorazepam one milligram every night — prescribed years ago for sleep after his brother's funeral — and I worry because he's drowsy in the mornings and a bit unsteady. The rest of his meds are blood pressure and vitamin D. No acute crisis, but the benzodiazepine plus frailty has us concerned."}
+  ]
+}

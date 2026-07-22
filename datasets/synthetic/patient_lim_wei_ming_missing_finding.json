@@ -1,0 +1,23 @@
+{
+  "id": "SYN-FIX-lim-missing-finding",
+  "scenario_type": "missing_finding",
+  "name": "Lim Wei Ming",
+  "patient": {
+    "id": "SYN-FIX-lim-missing-finding",
+    "name": "Lim Wei Ming",
+    "age": 81,
+    "sex": "M",
+    "chief_complaint": "Family concerned about energy, appetite, and forgetfulness",
+    "comorbidities": ["type 2 diabetes", "benign prostatic hyperplasia"],
+    "medications": ["metformin 500mg", "tamsulosin"],
+    "living_situation": "Lives with son Jason near Toa Payoh",
+    "risk_profile": "High"
+  },
+  "conversation_text": "Care coordinator: Jason, walk me through how your dad has been the past fortnight.\nCaregiver (Jason): Wei Ming is eighty-one. He's been more tired than usual — naps after lunch almost every day — and his grip when we shake hands feels weaker; he asked me to carry the rice bag upstairs because his arms shook. Eating is patchy; he'll finish soup but push rice aside, and the clinic noted a one-point-five kilo drop since March. Cognitively he misplaces his reading glasses and once called me by my brother's name, then laughed it off. Oh — while we were laughing about the neighbour's noisy renovation last Thursday, he nearly slipped on the wet kitchen tiles after watering plants but caught the counter and said it was nothing, then we went back to talking about the contractor. Otherwise mobility is slow but steady with his cane. That's the picture.",
+  "conversation": [
+    {"role": "assistant", "t": "00:00", "text": "Jason, walk me through how your dad has been the past fortnight."},
+    {"role": "patient", "t": "00:10", "text": "Wei Ming is eighty-one. He's been more tired than usual — naps after lunch almost every day — and his grip when we shake hands feels weaker; he asked me to carry the rice bag upstairs because his arms shook."},
+    {"role": "patient", "t": "00:48", "text": "Eating is patchy; he'll finish soup but push rice aside, and the clinic noted a one-point-five kilo drop since March. Cognitively he misplaces his reading glasses and once called me by my brother's name, then laughed it off."},
+    {"role": "patient", "t": "01:25", "text": "Oh — while we were laughing about the neighbour's noisy renovation last Thursday, he nearly slipped on the wet kitchen tiles after watering plants but caught the counter and said it was nothing, then we went back to talking about the contractor. Otherwise mobility is slow but steady with his cane. That's the picture."}
+  ]
+}

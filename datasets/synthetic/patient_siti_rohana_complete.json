@@ -1,0 +1,23 @@
+{
+  "id": "SYN-FIX-siti-complete",
+  "scenario_type": "complete",
+  "name": "Siti Rohana",
+  "patient": {
+    "id": "SYN-FIX-siti-complete",
+    "name": "Siti Rohana",
+    "age": 78,
+    "sex": "F",
+    "chief_complaint": "Fatigue and slower walking over three months",
+    "comorbidities": ["hypertension", "osteoarthritis"],
+    "medications": ["amlodipine 5mg", "paracetamol as needed"],
+    "living_situation": "Lives with daughter Farah in Tampines, HDB flat",
+    "risk_profile": "Moderate"
+  },
+  "conversation_text": "Care coordinator: Thanks for calling about your mum, Farah. How has Siti been managing at home?\nCaregiver (Farah): She's seventy-eight and still sharp with appointments, but the fatigue is real — by mid-afternoon she needs to sit with her feet up, and she says her legs feel heavy after climbing the two flights to our flat. Muscle-wise she struggles to open jars and last week couldn't rise from the low sofa without using both armrests. Appetite dipped after Hari Raya; she's left half her rice and lost about two kilos on the clinic scale. Memory is mostly okay, though she repeated the same grocery list twice on Tuesday and asked me whether we'd already paid the PUB bill. No new falls, just that slowing and the weakness. We're hoping the check-in catches frailty early before it gets worse.",
+  "conversation": [
+    {"role": "assistant", "t": "00:00", "text": "Thanks for calling about your mum, Farah. How has Siti been managing at home?"},
+    {"role": "patient", "t": "00:12", "text": "She's seventy-eight and still sharp with appointments, but the fatigue is real — by mid-afternoon she needs to sit with her feet up, and she says her legs feel heavy after climbing the two flights to our flat."},
+    {"role": "patient", "t": "00:45", "text": "Muscle-wise she struggles to open jars and last week couldn't rise from the low sofa without using both armrests. Appetite dipped after Hari Raya; she's left half her rice and lost about two kilos on the clinic scale."},
+    {"role": "patient", "t": "01:20", "text": "Memory is mostly okay, though she repeated the same grocery list twice on Tuesday and asked me whether we'd already paid the PUB bill. No new falls, just that slowing and the weakness. We're hoping the check-in catches frailty early before it gets worse."}
+  ]
+}

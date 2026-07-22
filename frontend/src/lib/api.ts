@@ -172,3 +172,192 @@ export function postMemorization(experimentIds?: string[], twinsPath?: string) {
     }),
   });
 }
+
+export type CasePatientPayload = {
+  id: string;
+  name?: string;
+  age?: number;
+  sex?: string;
+  chief_complaint?: string;
+  comorbidities?: string[];
+  medications?: string[];
+  living_situation?: string;
+  risk_profile?: string;
+};
+
+export type LoopEngineering = {
+  step_count: number;
+  tool_call_count: number;
+  error_count: number;
+  latency_ms: number;
+  summary: string;
+  related_metrics?: {
+    key: string;
+    label: string;
+    value?: number;
+    unit?: string;
+  }[];
+};
+
+export type CaseRunData = {
+  task_id: string;
+  agent_id: string;
+  cached: boolean;
+  patient: CasePatientPayload;
+  assessment: AssessmentData;
+  evaluate: EvaluateData;
+  trust: TrustData;
+  loop_engineering?: LoopEngineering;
+  provenance?: string;
+};
+
+const CASE_RUN_TIMEOUT_MS = 180_000;
+
+export function patientToCasePayload(p: {
+  id: string;
+  name: string;
+  age: number;
+  sex: string;
+  chiefComplaint: string;
+  comorbidities: string[];
+  medications: string[];
+  livingSituation: string;
+  riskProfile: string;
+}): CasePatientPayload {
+  return {
+    id: p.id,
+    name: p.name,
+    age: p.age,
+    sex: p.sex,
+    chief_complaint: p.chiefComplaint,
+    comorbidities: p.comorbidities,
+    medications: p.medications,
+    living_situation: p.livingSituation,
+    risk_profile: p.riskProfile,
+  };
+}
+
+export function postCaseRun(
+  patient: CasePatientPayload,
+  opts?: { force?: boolean; agentId?: string | null },
+) {
+  return request<FacadeEnvelope<CaseRunData>>("/cases/run", {
+    method: "POST",
+    timeoutMs: CASE_RUN_TIMEOUT_MS,
+    body: JSON.stringify({
+      patient,
+      agent_id: opts?.agentId ?? null,
+      force: opts?.force ?? false,
+    }),
+  });
+}
+
+export type CaseAgentInfo = {
+  id: string;
+  label: string;
+  deployment: "local" | "hosted";
+  hint: string;
+};
+
+export function getCaseAgents(): Promise<CaseAgentInfo[]> {
+  return request<CaseAgentInfo[]>("/cases/agents");
+}
+
+export type GeneratePatientsData = {
+  batch_id: string;
+  patients: CasePatientPayload[];
+  source: string;
+  provenance?: string;
+};
+
+export function postGeneratePatients(count = 3) {
+  return request<FacadeEnvelope<GeneratePatientsData>>("/cases/generate-patients", {
+    method: "POST",
+    timeoutMs: 90_000,
+    body: JSON.stringify({ count }),
+  });
+}
+
+export type FixturePatientRow = CasePatientPayload & {
+  scenario_type?: string;
+  conversation?: { role?: string; text?: string; t?: string }[];
+  conversation_text?: string | null;
+};
+
+export type FixturePatientsData = {
+  source: string;
+  count: number;
+  patients: FixturePatientRow[];
+};
+
+/** Fixed datasets/synthetic fixtures for reproducible demos. */
+export function getFixturePatients() {
+  return request<FacadeEnvelope<FixturePatientsData>>("/cases/fixture-patients");
+}
+
+/* --- Healthcare Evaluation Layer (clinical evidence; not the 18 engineering metrics) --- */
+
+export type ReviewStatus = "pending" | "approved" | "needs_review";
+
+export type CompletenessResult = {
+  present_fields: string[];
+  missing_fields: string[];
+  completeness_ratio: number | null;
+  detail?: string | null;
+};
+
+export type CriticalFinding = {
+  finding_id: string;
+  severity: "warning" | "info";
+  evidence_span: string;
+  message: string;
+};
+
+export type SafetyWarning = {
+  rule_id: string;
+  message: string;
+  evidence_span?: string | null;
+};
+
+export type HealthcareReport = {
+  report_id: string;
+  created_at: string;
+  review_status: ReviewStatus;
+  patient?: CasePatientPayload | null;
+  completeness?: CompletenessResult | null;
+  critical_findings: CriticalFinding[];
+  safety_warnings: SafetyWarning[];
+  provenance?: string;
+  insufficient_data: boolean;
+  detail?: string | null;
+};
+
+export type HealthcareEvaluateData = {
+  report_id: string;
+  report: HealthcareReport;
+  assessment_id?: string;
+  assessment?: Record<string, unknown>;
+};
+
+export type HealthcareAssessRequest = {
+  patient?: CasePatientPayload | null;
+  transcript?: string | null;
+  conversation?: { role?: string; text?: string; content?: string }[] | null;
+};
+
+const HEALTHCARE_ASSESS_TIMEOUT_MS = 120_000;
+
+/** Live LLM RGA extract + evaluate — not patient-chrome placeholders. */
+export function postHealthcareAssess(body: HealthcareAssessRequest) {
+  return request<FacadeEnvelope<HealthcareEvaluateData>>("/healthcare/assess", {
+    method: "POST",
+    timeoutMs: HEALTHCARE_ASSESS_TIMEOUT_MS,
+    body: JSON.stringify(body),
+  });
+}
+
+export function getHealthcareReport(reportId: string) {
+  return request<FacadeEnvelope<HealthcareEvaluateData>>(
+    `/healthcare/report/${encodeURIComponent(reportId)}`,
+  );
+}

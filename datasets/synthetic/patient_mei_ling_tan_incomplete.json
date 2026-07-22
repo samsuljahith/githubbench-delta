@@ -1,0 +1,23 @@
+{
+  "id": "SYN-FIX-meiling-incomplete",
+  "scenario_type": "incomplete",
+  "name": "Mei Ling Tan",
+  "patient": {
+    "id": "SYN-FIX-meiling-incomplete",
+    "name": "Mei Ling Tan",
+    "age": 79,
+    "sex": "F",
+    "chief_complaint": "Persistent fatigue; limited history available this call",
+    "comorbidities": ["hyperlipidemia"],
+    "medications": ["atorvastatin 20mg"],
+    "living_situation": "Lives with son Ken in Jurong West",
+    "risk_profile": "Low"
+  },
+  "conversation_text": "Care coordinator: Ken, what prompted today's call about Mei Ling?\nCaregiver (Ken): Mum is seventy-nine. Mostly I wanted to flag how tired she is — she wakes late, moves slowly around the flat, and says she has no energy for her usual evening walk. She's also been weaker in her arms; opening the sticky ketchup bottle took both of us last weekend, and she complained her thighs ache after standing at the sink. Beyond that we didn't get into eating or weight, and I didn't ask about memory because the call was short and she was resting. So that's really just the fatigue and the muscle tiredness from my side.",
+  "conversation": [
+    {"role": "assistant", "t": "00:00", "text": "Ken, what prompted today's call about Mei Ling?"},
+    {"role": "patient", "t": "00:08", "text": "Mum is seventy-nine. Mostly I wanted to flag how tired she is — she wakes late, moves slowly around the flat, and says she has no energy for her usual evening walk."},
+    {"role": "patient", "t": "00:35", "text": "She's also been weaker in her arms; opening the sticky ketchup bottle took both of us last weekend, and she complained her thighs ache after standing at the sink."},
+    {"role": "patient", "t": "01:05", "text": "Beyond that we didn't get into eating or weight, and I didn't ask about memory because the call was short and she was resting. So that's really just the fatigue and the muscle tiredness from my side."}
+  ]
+}

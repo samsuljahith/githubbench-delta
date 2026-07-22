@@ -39,6 +39,7 @@ flowchart LR
 | [memorization.md](memorization.md) | Memorization Discounted Scoring (post-process) |
 | [research_execution.md](research_execution.md) | Research execution / reproducibility platform |
 | [research_evidence_gaps.md](research_evidence_gaps.md) | Missing evidence for publishable research claims |
+| [healthcare_evaluation.md](healthcare_evaluation.md) | Additive clinical completeness / findings / safety warnings (not the 18 metrics) |
 | [configuration.md](configuration.md) | YAML + env configuration |
 
 ---
