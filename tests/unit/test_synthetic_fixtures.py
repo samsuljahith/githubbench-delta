@@ -54,4 +54,4 @@ def test_fixture_files_named_by_scenario(tmp_path: Path) -> None:  # noqa: ARG00
         "patient_mei_ling_tan_incomplete.json",
     ]:
         assert (root / name).is_file()
-    assert SCENARIO_TYPES == frozenset(REQUIRED)
+    assert frozenset(REQUIRED) == SCENARIO_TYPES

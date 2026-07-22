@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from unittest.mock import AsyncMock, patch
 
 from fastapi.testclient import TestClient
 
 from githubbench_delta.api.app import create_app
-from githubbench_delta.api.synthetic import GeneratedPatient, generate_patients_envelope
-from githubbench_delta.api.synthetic import GeneratePatientsRequest
+from githubbench_delta.api.synthetic import (
+    GeneratedPatient,
+    GeneratePatientsRequest,
+    generate_patients_envelope,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 LIVE_EXP = "exp_6afa2ce533ba4e0a"
@@ -135,10 +137,14 @@ def test_cases_run_failed_agent_no_cache(tmp_path: Path, monkeypatch):
         manifest.experiment_id = failed_exp
         runner.run = AsyncMock(return_value=manifest)
 
-        body = _client().post(
-            "/cases/run",
-            json={"patient": PATIENT, "agent_id": "minicpm", "force": True},
-        ).json()
+        body = (
+            _client()
+            .post(
+                "/cases/run",
+                json={"patient": PATIENT, "agent_id": "minicpm", "force": True},
+            )
+            .json()
+        )
         assert body["ok"] is False
         assert body["status"] == "insufficient_data"
         assert "Connection" in (body["detail"] or "") or "Provider" in (body["detail"] or "")
@@ -172,10 +178,14 @@ def test_cases_run_success_includes_loop_engineering(tmp_path: Path, monkeypatch
         manifest = AsyncMock()
         manifest.experiment_id = LIVE_EXP
         runner.run = AsyncMock(return_value=manifest)
-        body = _client().post(
-            "/cases/run",
-            json={"patient": PATIENT, "agent_id": "codex", "force": True},
-        ).json()
+        body = (
+            _client()
+            .post(
+                "/cases/run",
+                json={"patient": PATIENT, "agent_id": "codex", "force": True},
+            )
+            .json()
+        )
         assert body["ok"] is True
         le = body["data"]["loop_engineering"]
         assert le["step_count"] == 4

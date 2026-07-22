@@ -18,7 +18,7 @@ from githubbench_delta.healthcare_evaluation.models import (
     ReviewStatus,
 )
 from githubbench_delta.healthcare_evaluation.safety_rules import evaluate_safety_rules
-from githubbench_delta.healthcare_evaluation.store import load_report, save_report
+from githubbench_delta.healthcare_evaluation.store import load_report
 
 
 @pytest.fixture()
