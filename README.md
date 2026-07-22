@@ -8,7 +8,9 @@
 
 **Production evaluation for AI coding agents on real GitHub engineering work.**
 
-GitHubBench-Delta runs local and hosted agents against a curated multi-language task corpus, records full trajectories, scores **18 deterministic methodology metrics**, and publishes results through a dashboard and report pipeline — so comparisons are evidence, not demos.
+GitHubBench-Delta runs local and hosted agents against a curated multi-language task corpus, records full trajectories, scores **18 deterministic methodology metrics** (with per-metric **why this score** reasoning — no LLM-as-judge), and publishes results through a dashboard, report pipeline, and the **ElderWise** React patient UI — so comparisons are evidence, not demos.
+
+An additive **Healthcare Evaluation Layer** (Rapid Geriatric Assessment extract → completeness / findings / safety / review) sits beside engineering scores and never invents clinical metrics.
 
 ---
 
@@ -17,6 +19,7 @@ GitHubBench-Delta runs local and hosted agents against a curated multi-language 
 - [Why this project exists](#why-this-project-exists)
 - [Features](#features)
 - [Architecture overview](#architecture-overview)
+- [ElderWise frontend](#elderwise-frontend)
 - [Screenshots](#screenshots)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
@@ -51,11 +54,15 @@ GitHubBench-Delta turns those questions into a repeatable harness: fixed tasks, 
 
 - **Multi-agent comparison** — MiniCPM (local / Ollama), Claude (Anthropic), Codex (OpenAI)
 - **Curated corpus** — 60-task `datasets/v1` across repository search, issue analysis, architecture understanding, and more (Python, TypeScript, Go, Rust, Java fixtures)
-- **18 methodology metrics** — correctness, trajectory, safety, grounding, reliability, efficiency (no LLM-as-judge)
+- **18 methodology metrics** — correctness, trajectory, safety, grounding, reliability, efficiency (**no LLM-as-judge**); each metric emits `reasoning` / evidence for **why this score**
+- **Loop engineering** — case-run facade surfaces trajectory steps, tool calls, errors, latency, plus all scored metrics
 - **Full trajectories** — tool calls, timing, tokens, cost, sandbox events
 - **Resume-friendly pipeline** — experiment artifacts in JSON / JSONL / SQLite
+- **ElderWise UI** — Setup → Gemini synthetic cohort (append by day) → live `POST /cases/run` patient dashboard
+- **Healthcare Evaluation Layer** — event-driven RGA assess + rule engine (completeness, critical findings, safety warnings, review status); separate from the 18 engineering metrics
 - **Dashboard** — FastAPI + Plotly read-only explorer over completed runs
 - **Reports** — Markdown, HTML, PDF, JSON, CSV publication formats
+- **MDS / research** — Memorization Discounted Scoring and YAML research execution platform
 - **Dry-run mode** — offline gold synthesis for CI and local smoke tests without API keys
 
 ---
@@ -71,6 +78,10 @@ flowchart LR
   evals --> store[ResultStore]
   store --> dash[Dashboard]
   store --> reports[Reports]
+  store --> facade[Cases_and_Facade_API]
+  facade --> elder[ElderWise_UI]
+  gemini[Gemini_synthetic_chrome] --> elder
+  elder --> hc[Healthcare_Assess_Evaluate]
 ```
 
 | Stage | Role |
@@ -79,12 +90,35 @@ flowchart LR
 | ExperimentRunner | Orchestrates agents × tasks × trials with seed / concurrency / resume |
 | Agents & tools | Provider adapters + read-only GitHub tools |
 | Trajectory | Structured execution events for every run |
-| EvaluationEngine | Deterministic scoring via `MetricContext` |
-| ResultStore | Durable artifacts consumed by dashboard and reports |
+| EvaluationEngine | Deterministic scoring via `MetricContext` (+ per-metric reasoning) |
+| ResultStore | Durable artifacts consumed by dashboard, reports, and facade |
+| Cases / facade | `POST /cases/run`, `/evaluate`, `/trust`, `/healthcare/*` for ElderWise |
+| Gemini | Synthetic patient chrome only — **not** judge, **not** agent under test |
 
-Artifacts are the source of truth: the dashboard and reports **never** invoke agents.
+Artifacts are the source of truth: the Plotly dashboard and reports **never** invent scores. Live ElderWise evaluation runs a real 1-unit experiment (or returns `insufficient_data`).
 
-Deep dive: [docs/architecture.md](docs/architecture.md).
+Deep dive: [docs/architecture.md](docs/architecture.md) · Frontend: [docs/frontend.md](docs/frontend.md) · Healthcare: [docs/healthcare_evaluation.md](docs/healthcare_evaluation.md).
+
+---
+
+## ElderWise frontend
+
+Patient-facing React UI over the FastAPI facade ([`frontend/`](frontend/)):
+
+1. **`/setup`** — pick agent (`minicpm` / `claude` / `codex`), then generate **5** synthetic patients via Gemini (fixture fallback if Gemini unavailable). New batches **append** to the session cohort, grouped by generation day.
+2. **`/patients`** — day sections with manual **evaluate this day** (cached day aggregate is restored from sessionStorage; not auto-run).
+3. **Patient dashboard** — conversation chrome always visible; **Run live evaluation** fills engineering metrics (cards with **Why this score** + loop engineering stats) and healthcare report (completeness / findings / safety / review + extracted RGA fields).
+
+```bash
+# API (GEMINI_API_KEY in .env for generate; agent keys for live case runs)
+uv run uvicorn githubbench_delta.api.app:create_app --factory --reload --host 127.0.0.1 --port 8000
+
+# UI
+cd frontend && npm install && npm run dev
+# open http://127.0.0.1:5173/setup
+```
+
+Details: [docs/frontend.md](docs/frontend.md) · [docs/api.md](docs/api.md).
 
 ---
 
@@ -151,10 +185,11 @@ uv run githubbench report generate \
   -f markdown
 
 uv run uvicorn githubbench_delta.api.app:create_app --factory --reload
-# open http://127.0.0.1:8000/dashboard/
+# Plotly dashboard: http://127.0.0.1:8000/dashboard/
+# ElderWise UI (separate terminal): cd frontend && npm run dev → http://127.0.0.1:5173/setup
 ```
 
-More recipes: [docs/quickstart.md](docs/quickstart.md) · [examples/](examples/README.md).
+More recipes: [docs/quickstart.md](docs/quickstart.md) · [docs/frontend.md](docs/frontend.md) · [examples/](examples/README.md).
 
 ---
 
@@ -234,6 +269,10 @@ Guide: [docs/evaluation.md](docs/evaluation.md) · Formulas: [docs/evaluation_me
 | Reliability | `recovery_score` · `calibration` · `cross_trial_consistency` |
 | Efficiency | `reproducibility` · `cost_normalized_capability` · `local_vs_hosted_parity` |
 
+Facade `POST /evaluate` and `POST /cases/run` expose mean scores as `%` plus each metric’s deterministic **`reasoning`** (and optional evidence / suggested improvements). ElderWise Engineering Evaluation cards show that rationale as **Why this score**.
+
+Healthcare clinical groups are separate: completeness, critical findings, safety warnings, review status — see [docs/healthcare_evaluation.md](docs/healthcare_evaluation.md).
+
 ---
 
 ## Repository structure
@@ -244,11 +283,15 @@ githubbench-delta/
 │   ├── agents/                # MiniCPM, Claude, Codex
 │   ├── metrics/               # 18 methodology evaluators
 │   ├── pipeline/              # Experiments + ResultStore
-│   ├── dashboard/ · reports/  # Explore + publish
-│   ├── datasets/ · tasks/ · tools/ · cli/ · api/
-│   └── ...
-├── configs/                   # default / agents / metrics YAML
+│   ├── api/                   # Facade, cases, synthetic (Gemini)
+│   ├── healthcare_evaluation/ # RGA assess + rule engine
+│   ├── memorization/ · research/
+│   ├── dashboard/ · reports/
+│   └── datasets/ · tasks/ · tools/ · cli/
+├── frontend/                  # ElderWise React (Vite) UI
+├── configs/                   # default / agents / metrics / research YAML
 ├── datasets/v1/               # Corpus + multi-language fixtures
+├── datasets/synthetic/        # Offline patient fixture fallback
 ├── results/experiments/       # Run artifacts (do not edit by hand)
 ├── docs/                      # Guides, screenshots, examples
 ├── examples/                  # Onboarding recipes
@@ -279,13 +322,13 @@ Codex led every task on overall score. Three Codex failures were OpenAI rate-lim
 
 ## Future roadmap
 
-Phases 1–8 (scaffolding through production hardening) are complete. Planned follow-ups:
+Phases 1–8 (scaffolding through production hardening), ElderWise integration, healthcare evaluation, and MDS/research packages are in-tree. Planned follow-ups:
 
 - Multi-trial live leaderboards (`trial_count ≥ 3`) for stable reproducibility
 - Live multi-agent runs including Claude (keys + quota)
 - Broader live coverage beyond the 6-task showcase
 - Stronger calibration when agents emit stated confidence
-- Continued dashboard / report UX polish
+- Continued ElderWise / dashboard / report UX polish
 
 Research evidence gaps (what validation can run vs what is blocked):  
 **[docs/research_evidence_gaps.md](docs/research_evidence_gaps.md)**.
@@ -301,6 +344,7 @@ History: [docs/phases.md](docs/phases.md).
 - Peer metrics such as `reproducibility` are weak with a single trial.
 - `calibration` skipped when agents do not state confidence.
 - Dry-run showcase artifacts ([docs/showcase.md](docs/showcase.md)) demonstrate pipeline UX; they are **not** live model rankings.
+- Gemini generates **synthetic patient chrome** only; engineering scores remain deterministic. Healthcare assess uses OpenAI (or MiniCPM fallback) for RGA extraction — not for the 18 metrics.
 - PDF report export may require system libraries (WeasyPrint).
 
 ---
@@ -319,6 +363,7 @@ This **README** is the public entry point. The docs hub is **[docs/index.md](doc
 | [Installation](docs/installation.md) · [Quick Start](docs/quickstart.md) | Onboarding |
 | [CLI](docs/cli.md) · [API](docs/api.md) · [Pipeline](docs/pipeline.md) | Operations |
 | [Frontend](docs/frontend.md) · [INTEGRATION_REPORT.md](INTEGRATION_REPORT.md) | ElderWise UI + facade |
+| [Healthcare evaluation](docs/healthcare_evaluation.md) | RGA assess + clinical rule layer |
 | [Dashboard](docs/dashboard.md) · [Reports](docs/reports.md) | Explore and publish |
 | [Memorization (MDS)](docs/memorization.md) | Post-process memorization vs capability |
 | [Research execution](docs/research_execution.md) | YAML registry, artifacts, validation dashboard |
@@ -336,8 +381,8 @@ Apache License 2.0 — see [LICENSE](LICENSE).
 
 ## Acknowledgements
 
-Built with [uv](https://github.com/astral-sh/uv), [Typer](https://github.com/fastapi/typer), [FastAPI](https://github.com/fastapi/fastapi), [Plotly](https://github.com/plotly/plotly.py), and [Pydantic](https://github.com/pydantic/pydantic).
+Built with [uv](https://github.com/astral-sh/uv), [Typer](https://github.com/fastapi/typer), [FastAPI](https://github.com/fastapi/fastapi), [Plotly](https://github.com/plotly/plotly.py), [Pydantic](https://github.com/pydantic/pydantic), and [React](https://react.dev/) (ElderWise / Vite).
 
-Agent backends use [Ollama](https://ollama.com/), the [Anthropic](https://www.anthropic.com/) API, and the [OpenAI](https://openai.com/) API.
+Agent backends use [Ollama](https://ollama.com/), the [Anthropic](https://www.anthropic.com/) API, and the [OpenAI](https://openai.com/) API. Synthetic patient chrome uses the [Google Gemini](https://ai.google.dev/) API when configured.
 
 Contributions welcome — see [docs/contributing.md](docs/contributing.md).
