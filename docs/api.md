@@ -25,9 +25,9 @@ Thin wrappers over `ExperimentRepository` + `MemorizationEngine`. **Never fabric
 |--------|------|------|-------------|
 | GET | `/cases/agents` | — | Agent catalog for setup wizard (minicpm / claude / codex) |
 | POST | `/cases/generate-patients` | `{ count? }` | Gemini synthetic patients (1–5); requires `GEMINI_API_KEY` |
-| POST | `/cases/run` | `{ patient, agent_id?, force? }` | Live 1-unit experiment; returns scores + `loop_engineering`; failed agent → `insufficient_data` |
+| POST | `/cases/run` | `{ patient, agent_id?, force? }` | Live 1-unit experiment; returns scores + `loop_engineering` (trajectory stats + **all** scored metrics as `related_metrics`); failed agent → `insufficient_data` |
 | POST | `/assessment` | `{ experiment_id?, agent_id? }` | Domains from mean `group_scores` (0–5) |
-| POST | `/evaluate` | `{ experiment_id?, agent_id? }` | Per-metric means as `%` |
+| POST | `/evaluate` | `{ experiment_id?, agent_id? }` | Per-metric means as `%` plus deterministic `reasoning` / `evidence` / `suggested_improvements` from latest `metric_results` (not LLM-as-judge) |
 | POST | `/trust` | `{ experiment_id?, agent_id? }` | Equal-weight composite 0–100 + breakdown |
 | POST | `/memorization` | `{ experiment_ids?, experiment_id?, twins_path? }` | MDS report JSON |
 

@@ -171,7 +171,13 @@ function SectionEmpty({
   );
 }
 
-function HealthcareEvaluationCard({ report }: { report: HealthcareReport }) {
+function HealthcareEvaluationCard({
+  report,
+  assessment,
+}: {
+  report: HealthcareReport;
+  assessment?: Record<string, unknown> | null;
+}) {
   const completeness = report.completeness;
   const findings = report.critical_findings ?? [];
   const warnings = report.safety_warnings ?? [];
@@ -180,6 +186,28 @@ function HealthcareEvaluationCard({ report }: { report: HealthcareReport }) {
       ? Math.round(completeness.completeness_ratio * 100)
       : null;
   const reviewLabel = (report.review_status || "pending").replace(/_/g, " ");
+  const createdAt = report.created_at
+    ? (() => {
+        try {
+          return new Date(report.created_at).toLocaleString();
+        } catch {
+          return report.created_at;
+        }
+      })()
+    : null;
+
+  const clinicalOutput =
+    assessment &&
+    typeof assessment === "object" &&
+    assessment.clinical_output &&
+    typeof assessment.clinical_output === "object"
+      ? (assessment.clinical_output as { fields?: Record<string, unknown>; narrative?: string })
+      : null;
+  const extractedFields = clinicalOutput?.fields
+    ? Object.entries(clinicalOutput.fields).filter(
+        ([, v]) => v != null && String(v).trim() !== "",
+      )
+    : [];
 
   return (
     <div className="glass-card rounded-2xl border border-border/60 p-5 md:p-6">
@@ -188,6 +216,9 @@ function HealthcareEvaluationCard({ report }: { report: HealthcareReport }) {
           clinical evidence layer
         </span>
         <span className="text-xs text-muted-foreground">report {report.report_id}</span>
+        {createdAt && (
+          <span className="text-xs text-muted-foreground">· created {createdAt}</span>
+        )}
       </div>
 
       <div className="grid gap-5 md:grid-cols-2">
@@ -204,8 +235,13 @@ function HealthcareEvaluationCard({ report }: { report: HealthcareReport }) {
                 {(completeness.present_fields ?? []).length} present ·{" "}
                 {(completeness.missing_fields ?? []).length} missing of required RGA fields
               </p>
-              {(completeness.missing_fields ?? []).length > 0 && (
+              {(completeness.present_fields ?? []).length > 0 && (
                 <p className="mt-2 text-xs text-foreground">
+                  Present: {completeness.present_fields.join(", ")}
+                </p>
+              )}
+              {(completeness.missing_fields ?? []).length > 0 && (
+                <p className="mt-1 text-xs text-muted-foreground">
                   Missing: {completeness.missing_fields.join(", ")}
                 </p>
               )}
@@ -224,7 +260,8 @@ function HealthcareEvaluationCard({ report }: { report: HealthcareReport }) {
             </span>
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
-            Clinician workflow status — independent of engineering TrustScore.
+            Enum: <code className="text-foreground">{report.review_status || "pending"}</code> —
+            clinician workflow status, independent of engineering TrustScore.
           </p>
         </div>
       </div>
@@ -244,9 +281,12 @@ function HealthcareEvaluationCard({ report }: { report: HealthcareReport }) {
                   key={f.finding_id}
                   className="rounded-xl border border-warning/20 bg-warning/5 px-3 py-2 text-sm"
                 >
-                  <span className="text-[10.5px] font-semibold uppercase tracking-wider text-warning">
-                    {f.severity}
-                  </span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-[10.5px] font-semibold uppercase tracking-wider text-warning">
+                      {f.severity}
+                    </span>
+                    <span className="text-[10.5px] text-muted-foreground">{f.finding_id}</span>
+                  </div>
                   <p className="mt-0.5 text-foreground">{f.message}</p>
                   {f.evidence_span && (
                     <p className="mt-1 text-xs text-muted-foreground">
@@ -273,7 +313,10 @@ function HealthcareEvaluationCard({ report }: { report: HealthcareReport }) {
                   key={w.rule_id}
                   className="rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm"
                 >
-                  <p className="text-foreground">{w.message}</p>
+                  <span className="text-[10.5px] font-semibold uppercase tracking-wider text-destructive">
+                    {w.rule_id}
+                  </span>
+                  <p className="mt-0.5 text-foreground">{w.message}</p>
                   {w.evidence_span && (
                     <p className="mt-1 text-xs text-muted-foreground">
                       evidence: “{w.evidence_span}”
@@ -285,6 +328,31 @@ function HealthcareEvaluationCard({ report }: { report: HealthcareReport }) {
           )}
         </div>
       </div>
+
+      {extractedFields.length > 0 && (
+        <div className="mt-5">
+          <div className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Extracted RGA fields
+          </div>
+          <p className="mb-2 text-xs text-muted-foreground">
+            From live LLM assess — not engineering metrics.
+          </p>
+          <dl className="grid gap-2 sm:grid-cols-2">
+            {extractedFields.map(([key, value]) => (
+              <div key={key} className="rounded-lg bg-secondary/30 px-3 py-2">
+                <dt className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  {key.replace(/_/g, " ")}
+                </dt>
+                <dd className="mt-0.5 text-sm text-foreground">
+                  {typeof value === "string" || typeof value === "number" || typeof value === "boolean"
+                    ? String(value)
+                    : JSON.stringify(value)}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
 
       {report.provenance && (
         <p className="mt-5 text-xs text-muted-foreground">{report.provenance}</p>
@@ -344,7 +412,19 @@ function PatientDashboard() {
     });
     const reportId = assessed.data?.report_id;
     if (reportId) {
-      return getHealthcareReport(reportId);
+      const stored = await getHealthcareReport(reportId);
+      // Preserve live assess envelope (clinical_output) — report GET does not include it.
+      if (stored.data && assessed.data?.assessment) {
+        return {
+          ...stored,
+          data: {
+            ...stored.data,
+            assessment_id: assessed.data.assessment_id ?? stored.data.assessment_id,
+            assessment: assessed.data.assessment,
+          },
+        };
+      }
+      return stored;
     }
     return assessed;
   }, [patient?.id, runKey, started]);
@@ -700,6 +780,7 @@ function PatientDashboard() {
                 const Icon = passes ? TrendingUp : TrendingDown;
                 const barMax = m.unit === "%" ? 100 : 5;
                 const pct = Math.min(100, (m.value / barMax) * 100);
+                const improvements = m.suggested_improvements ?? [];
                 return (
                   <div
                     key={m.key}
@@ -731,6 +812,28 @@ function PatientDashboard() {
                         style={{ width: `${pct}%` }}
                       />
                     </div>
+                    <div className="mt-3">
+                      <div className="text-[10.5px] font-medium uppercase tracking-wider text-muted-foreground">
+                        Why this score
+                      </div>
+                      <p className="mt-1 text-xs text-foreground">
+                        {m.reasoning?.trim()
+                          ? m.reasoning
+                          : "No reasoning recorded for this run"}
+                      </p>
+                    </div>
+                    {improvements.length > 0 && (
+                      <div className="mt-2">
+                        <div className="text-[10.5px] font-medium uppercase tracking-wider text-muted-foreground">
+                          Improvements
+                        </div>
+                        <ul className="mt-1 list-inside list-disc text-xs text-muted-foreground">
+                          {improvements.map((tip) => (
+                            <li key={tip}>{tip}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -790,7 +893,10 @@ function PatientDashboard() {
             }}
           />
         ) : (
-          <HealthcareEvaluationCard report={hcEnvelope.data.report} />
+          <HealthcareEvaluationCard
+            report={hcEnvelope.data.report}
+            assessment={hcEnvelope.data.assessment}
+          />
         )}
       </SectionShell>
 

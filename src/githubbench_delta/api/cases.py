@@ -29,13 +29,6 @@ from githubbench_delta.pipeline.models import ExperimentSpec
 cases_router = APIRouter(tags=["cases"])
 
 ALLOWED_CASE_AGENTS = frozenset({"minicpm", "claude", "codex"})
-_LOOP_METRIC_KEYS = (
-    "tool_economy",
-    "planning_quality",
-    "unnecessary_tool_calls",
-    "recovery_score",
-    "engineering_usefulness",
-)
 
 _SAFE_ID = re.compile(r"[^A-Za-z0-9._-]+")
 _inflight: dict[str, asyncio.Lock] = {}
@@ -277,6 +270,8 @@ def _loop_engineering(
     inspect: dict[str, Any],
     evaluate_data: dict[str, Any] | None,
 ) -> dict[str, Any]:
+    """Trajectory/tool-loop telemetry + all scored metrics (not a 5-key subset)."""
+
     step_count = int(inspect.get("step_count") or 0)
     tool_call_count = int(inspect.get("tool_call_count") or 0)
     related: list[dict[str, Any]] = []
@@ -286,15 +281,18 @@ def _loop_engineering(
             if not isinstance(m, dict):
                 continue
             key = str(m.get("key") or "")
-            if any(k in key for k in _LOOP_METRIC_KEYS):
-                related.append(
-                    {
-                        "key": key,
-                        "label": m.get("label") or key,
-                        "value": m.get("value"),
-                        "unit": m.get("unit"),
-                    }
-                )
+            if not key:
+                continue
+            entry: dict[str, Any] = {
+                "key": key,
+                "label": m.get("label") or key,
+                "value": m.get("value"),
+                "unit": m.get("unit"),
+            }
+            reasoning = str(m.get("reasoning") or "").strip()
+            if reasoning:
+                entry["reasoning"] = reasoning
+            related.append(entry)
     summary = (
         f"Agent took {step_count} trajectory steps / {tool_call_count} tool calls before scoring"
     )

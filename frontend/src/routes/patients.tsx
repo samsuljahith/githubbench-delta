@@ -281,8 +281,12 @@ function PatientsPage() {
                 {snap && !busy && (
                   <div className="glass-card mb-4 rounded-2xl p-4">
                     <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                      <BarChart3 className="h-3.5 w-3.5 text-primary" /> Day aggregate (live)
+                      <BarChart3 className="h-3.5 w-3.5 text-primary" /> Day aggregate (cached)
                     </div>
+                    <p className="mb-3 text-xs text-muted-foreground">
+                      Restored from this browser session — not auto-run. Click evaluate this day to
+                      refresh live scores.
+                    </p>
                     <div className="flex flex-wrap gap-4 text-sm">
                       <div>
                         <span className="text-muted-foreground">ok / fail · </span>
@@ -316,6 +320,13 @@ function PatientsPage() {
                         included in means.
                       </p>
                     )}
+                  </div>
+                )}
+
+                {!snap && !busy && (
+                  <div className="mb-4 rounded-2xl border border-dashed border-border bg-card/50 px-4 py-3 text-sm text-muted-foreground">
+                    Not evaluated yet — click <span className="font-medium text-foreground">evaluate this day</span>{" "}
+                    for a live day aggregate.
                   </div>
                 )}
 
